@@ -7,6 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <ListView x:Name="Logger" HorizontalAlignment="Left" Height="200" Margin="10,209,0,0" VerticalAlignment="Top" Width="772" IsSynchronizedWithCurrentItem="False">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="SetIP" Content="SET IP" HorizontalAlignment="Left" Height="37" Margin="47,98,0,0" VerticalAlignment="Top" Width="82"/>
+        <TextBox x:Name="IPAddress" HorizontalAlignment="Left" Height="37" Margin="191,98,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="262"/>
+
     </Grid>
 </Window>

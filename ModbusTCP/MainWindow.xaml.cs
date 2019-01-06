@@ -23,6 +23,10 @@ namespace ModbusTCP
         public MainWindow()
         {
             InitializeComponent();
+
+
+
+
         }
     }
 }
