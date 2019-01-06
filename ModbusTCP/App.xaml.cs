@@ -13,5 +13,6 @@ namespace ModbusTCP
     /// </summary>
     public partial class App : Application
     {
+
     }
 }

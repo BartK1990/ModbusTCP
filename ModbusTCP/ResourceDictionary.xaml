@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ModbusTCP">
+
+    <SolidColorBrush x:Key="TextsBackgroundColor">#FFA4A2A2</SolidColorBrush>
+    <SolidColorBrush x:Key="WindowBackgroundColor">#FF000000</SolidColorBrush>
+    
+    <Style x:Key="ListViewBackground" TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="{StaticResource TextsBackgroundColor}"/>
+    </Style>
+    <Style x:Key="TextBoxBackground" TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="{StaticResource TextsBackgroundColor}"/>
+    </Style>
+
+</ResourceDictionary>

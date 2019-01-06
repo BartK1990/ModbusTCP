@@ -20,6 +20,11 @@ namespace ModbusTCP
     /// </summary>
     public partial class MainWindow : Window
     {
+        struct LoggerItem
+        {
+            public string Log {get; set;}
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,6 +32,15 @@ namespace ModbusTCP
 
 
 
+        }
+
+        private void SetIP_Click(object sender, RoutedEventArgs e)
+        {
+            MBTCPConnManager mbtcpConnManager = new MBTCPConnManager();
+            if (mbtcpConnManager.SetSlaveIPAddr(IPAddress.Text))
+                Logger.Items.Add(new LoggerItem() { Log = "IP address Set" });
+            else
+                Logger.Items.Add(new LoggerItem() { Log = "Wrong IP address format" });
         }
     }
 }

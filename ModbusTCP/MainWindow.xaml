@@ -5,17 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModbusTCP"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <ListView x:Name="Logger" HorizontalAlignment="Left" Height="200" Margin="10,209,0,0" VerticalAlignment="Top" Width="772" IsSynchronizedWithCurrentItem="False">
+        Title="MainWindow" Height="450" Width="800" Background="{StaticResource WindowBackgroundColor}">
+    
+    <Grid Background="Black">
+        <ListView Style="{StaticResource ListViewBackground}" x:Name="Logger" HorizontalAlignment="Left" Height="200" Margin="10,209,0,0" VerticalAlignment="Top" Width="772" IsSynchronizedWithCurrentItem="False">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn/>
+                    <GridViewColumn Header="Log" DisplayMemberBinding="{Binding Log}"/>
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="SetIP" Content="SET IP" HorizontalAlignment="Left" Height="37" Margin="47,98,0,0" VerticalAlignment="Top" Width="82"/>
-        <TextBox x:Name="IPAddress" HorizontalAlignment="Left" Height="37" Margin="191,98,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="262"/>
+        <Button x:Name="SetIP" Content="SET IP" HorizontalAlignment="Left" Height="37" Margin="47,98,0,0" VerticalAlignment="Top" Width="82" Click="SetIP_Click"/>
+        <TextBox Style="{StaticResource TextBoxBackground}" x:Name="IPAddress" HorizontalAlignment="Left" Height="37" Margin="148,98,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="262"/>
 
     </Grid>
 </Window>
