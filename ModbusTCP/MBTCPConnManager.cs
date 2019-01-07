@@ -10,13 +10,27 @@ namespace ModbusTCP
     {
         private MBTCPConn mbtcpConn;
 
-        public bool SetSlaveIPAddr(string ipAddr)
+        public bool SetSlaveIPAddrAndPort(string ipAddr, int port, out string returnInfo)
         {
             mbtcpConn = new MBTCPConn();
             if (mbtcpConn.SetSlaveIPAddr(ipAddr))
-                return true;
+            {             
+                if (mbtcpConn.SetSlaveIPPort(port))
+                {
+                    returnInfo = "IP address Set";
+                    return true;
+                }
+                else
+                {
+                    returnInfo = "Wrong IP port";
+                    return false;
+                }
+            }
             else
+            {
+                returnInfo = "Wrong IP address format";
                 return false;
+            }
         }
     }
 }

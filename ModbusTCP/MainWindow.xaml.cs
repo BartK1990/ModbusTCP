@@ -23,24 +23,34 @@ namespace ModbusTCP
         struct LoggerItem
         {
             public string Log {get; set;}
+            public string Time { get; set; }
+            public LoggerItem(string log)
+            {
+                Log = log;
+                Time = DateTime.Now.ToString("h:mm:ss tt");
+            }
         }
 
         public MainWindow()
         {
             InitializeComponent();
 
-
-
-
         }
 
         private void SetIP_Click(object sender, RoutedEventArgs e)
         {
             MBTCPConnManager mbtcpConnManager = new MBTCPConnManager();
-            if (mbtcpConnManager.SetSlaveIPAddr(IPAddress.Text))
-                Logger.Items.Add(new LoggerItem() { Log = "IP address Set" });
-            else
-                Logger.Items.Add(new LoggerItem() { Log = "Wrong IP address format" });
+            string ipAddr = IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
+            mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, int.Parse(IPPort.Text) , out string log);
+
+            LoggerAdd(log);
         }
+
+        private void LoggerAdd(string info)
+        {
+            Logger.Items.Insert(0, new LoggerItem(info));
+        }
+
+
     }
 }

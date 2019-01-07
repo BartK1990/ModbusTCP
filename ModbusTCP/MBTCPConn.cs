@@ -20,11 +20,22 @@ namespace ModbusTCP
             IPSlavePort = -1;
         }
 
-        public bool SetSlaveIPAddr(string IPAddr) // true if success and false if fault
+        public bool SetSlaveIPAddr(string ipAddr) // true if success and false if fault
         {
-            if(IPAddress.TryParse(IPAddr, out IPAddress ip))
+            if(IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
                 IPSlaveAddr = ip;
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public bool SetSlaveIPPort(int port) // true if success and false if fault
+        {
+            if ((port >= 0) && (port <= 65535))
+            {
+                IPSlavePort = port;
                 return true;
             }
             else
