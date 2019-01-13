@@ -20,9 +20,18 @@ namespace ModbusTCP
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        MBTCPConnManager mbtcpConnManager;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+        }
+
         struct LoggerItem
         {
-            public string Log {get; set;}
+            public string Log { get; set; }
             public string Time { get; set; }
             public LoggerItem(string log)
             {
@@ -31,17 +40,17 @@ namespace ModbusTCP
             }
         }
 
-        public MainWindow()
+        public static bool IsValid(string str)
         {
-            InitializeComponent();
-
+            int i;
+            return int.TryParse(str, out i) && i >= 5 && i <= 9999;
         }
 
         private void SetIP_Click(object sender, RoutedEventArgs e)
         {
-            MBTCPConnManager mbtcpConnManager = new MBTCPConnManager();
+            mbtcpConnManager = new MBTCPConnManager();
             string ipAddr = IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
-            mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, int.Parse(IPPort.Text) , out string log);
+            mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
 
             LoggerAdd(log);
         }
@@ -51,6 +60,19 @@ namespace ModbusTCP
             Logger.Items.Insert(0, new LoggerItem(info));
         }
 
+        private void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            Connect_MBTCP();
+        }
 
+        private async void Connect_MBTCP()
+        {
+            Logger.Items.Insert(0, new LoggerItem(await mbtcpConnManager.ConnectAsync()));
+        }
+
+        private void IPAddr1_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !IsValid(((TextBox)sender).Text + e.Text);
+        }
     }
 }

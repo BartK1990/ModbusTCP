@@ -10,12 +10,18 @@ namespace ModbusTCP
     {
         private MBTCPConn mbtcpConn;
 
-        public bool SetSlaveIPAddrAndPort(string ipAddr, int port, out string returnInfo)
+        public bool SetSlaveIPAddrAndPort(string ipAddr, string port, out string returnInfo)
         {
             mbtcpConn = new MBTCPConn();
+            if (!int.TryParse(port, out int portInt))
+            {
+                returnInfo = "Wrong IP port";
+                return false;
+            }
+
             if (mbtcpConn.SetSlaveIPAddr(ipAddr))
             {             
-                if (mbtcpConn.SetSlaveIPPort(port))
+                if (mbtcpConn.SetSlaveIPPort(portInt))
                 {
                     returnInfo = "IP address Set";
                     return true;
@@ -30,6 +36,19 @@ namespace ModbusTCP
             {
                 returnInfo = "Wrong IP address format";
                 return false;
+            }
+        }
+
+        public async Task<string> ConnectAsync()
+        {
+            try
+            {
+                await mbtcpConn.ConnectAsync();
+                return "Connected";
+            }
+            catch(Exception e)
+            {
+                return e.ToString();
             }
         }
     }
