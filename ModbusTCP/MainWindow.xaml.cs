@@ -40,7 +40,7 @@ namespace ModbusTCP
             }
         }
 
-        private void IPInputHandling(object sender, TextBox nextTb, TextCompositionEventArgs e)
+        private void IPInputPreviewTextInputHandling(object sender, TextBox nextTb, TextCompositionEventArgs e)
         {
             if (e.Text == "." && nextTb != null)
                 nextTb.Focus();
@@ -50,20 +50,6 @@ namespace ModbusTCP
                 TextBox tb = sender as TextBox;
                 lastIpAddressPart = tb.Text;
             }
-        }
-
-        private bool IPPartInRange(int i)
-        {
-            return (i >= 0 && i <= 255) ? true : false;
-        }
-
-        private void SetIP_Click(object sender, RoutedEventArgs e)
-        {
-            mbtcpConnManager = new MBTCPConnManager();
-            string ipAddr = IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
-            mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
-
-            LoggerAdd(log);
         }
 
         private void LoggerAdd(string info)
@@ -81,24 +67,55 @@ namespace ModbusTCP
             Logger.Items.Insert(0, new LoggerItem(await mbtcpConnManager.ConnectAsync()));
         }
 
+        #region IPInputHandling
+        private void IPInputTectChangedHandling(object sender)
+        {
+            if (sender is TextBox)
+            {
+                TextBox tb = sender as TextBox;
+                if (int.TryParse((tb.Text), out int i))
+                {
+                    if (!IPPartInRange(i))
+                    {
+                        tb.Text = lastIpAddressPart;
+                        tb.SelectionStart = tb.Text.Length;
+                    }
+                }
+            }
+        }
+
+        private bool IPPartInRange(int i)
+        {
+            return (i >= 0 && i <= 255) ? true : false;
+        }
+
+        private void SetIP_Click(object sender, RoutedEventArgs e)
+        {
+            mbtcpConnManager = new MBTCPConnManager();
+            string ipAddr = IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
+            mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
+
+            LoggerAdd(log);
+        }
+
         private void IPAddr1_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            IPInputHandling(sender, IPAddr2, e);
+            IPInputPreviewTextInputHandling(sender, IPAddr2, e);
         }
 
         private void IPAddr2_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            IPInputHandling(sender, IPAddr3, e);
+            IPInputPreviewTextInputHandling(sender, IPAddr3, e);
         }
 
         private void IPAddr3_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            IPInputHandling(sender, IPAddr4, e);
+            IPInputPreviewTextInputHandling(sender, IPAddr4, e);
         }
 
         private void IPAddr4_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            IPInputHandling(sender, null, e);
+            IPInputPreviewTextInputHandling(sender, null, e);
         }
 
         private void IPPort_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -108,13 +125,23 @@ namespace ModbusTCP
 
         private void IPAddr1_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(sender is TextBox)
-            {
-                TextBox tb = sender as TextBox;
-                if (int.TryParse((tb.Text), out int i))
-                    if(!IPPartInRange(i))
-                        tb.Text = lastIpAddressPart;
-            }      
+            IPInputTectChangedHandling(sender);
         }
+
+        private void IPAddr2_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            IPInputTectChangedHandling(sender);
+        }
+
+        private void IPAddr3_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            IPInputTectChangedHandling(sender);
+        }
+
+        private void IPAddr4_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            IPInputTectChangedHandling(sender);
+        }
+        #endregion 
     }
 }
