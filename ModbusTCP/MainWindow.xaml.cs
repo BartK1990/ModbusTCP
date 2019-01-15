@@ -29,17 +29,6 @@ namespace ModbusTCP
 
         }
 
-        struct LoggerItem
-        {
-            public string Log { get; set; }
-            public string Time { get; set; }
-            public LoggerItem(string log)
-            {
-                Log = log;
-                Time = DateTime.Now.ToString("h:mm:ss tt");
-            }
-        }
-
         private void IPInputPreviewTextInputHandling(object sender, TextBox nextTb, TextCompositionEventArgs e)
         {
             if (e.Text == "." && nextTb != null)
@@ -52,11 +41,6 @@ namespace ModbusTCP
             }
         }
 
-        private void LoggerAdd(string info)
-        {
-            Logger.Items.Insert(0, new LoggerItem(info));
-        }
-
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
             Connect_MBTCP();
@@ -64,7 +48,16 @@ namespace ModbusTCP
 
         private async void Connect_MBTCP()
         {
-            Logger.Items.Insert(0, new LoggerItem(await mbtcpConnManager.ConnectAsync()));
+            LoggerManager.LogMainWindow(await mbtcpConnManager.ConnectAsync());
+        }
+
+        private void SetIP_Click(object sender, RoutedEventArgs e)
+        {
+            mbtcpConnManager = new MBTCPConnManager();
+            string ipAddr = IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
+            mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
+
+            LoggerManager.LogMainWindow(log);
         }
 
         #region IPInputHandling
@@ -87,15 +80,6 @@ namespace ModbusTCP
         private bool IPPartInRange(int i)
         {
             return (i >= 0 && i <= 255) ? true : false;
-        }
-
-        private void SetIP_Click(object sender, RoutedEventArgs e)
-        {
-            mbtcpConnManager = new MBTCPConnManager();
-            string ipAddr = IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
-            mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
-
-            LoggerAdd(log);
         }
 
         private void IPAddr1_PreviewTextInput(object sender, TextCompositionEventArgs e)
