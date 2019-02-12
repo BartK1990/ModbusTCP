@@ -25,8 +25,8 @@ namespace ModbusTCP
 
         public MainWindow()
         {
+            mbtcpConnManager = new MBTCPConnManager();
             InitializeComponent();
-
         }
 
         private void IPInputPreviewTextInputHandling(object sender, TextBox nextTb, TextCompositionEventArgs e)
@@ -43,24 +43,19 @@ namespace ModbusTCP
 
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
-            Connect_MBTCP();
-        }
-
-        private async void Connect_MBTCP()
-        {
-            LoggerManager.LogMainWindow(await mbtcpConnManager.ConnectAsync());
+            mbtcpConnManager.ConnectAsync();
         }
 
         private void SetIP_Click(object sender, RoutedEventArgs e)
         {
-            mbtcpConnManager = new MBTCPConnManager();
             string ipAddr = IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
             mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
 
-            LoggerManager.LogMainWindow(log);
+            LoggerManager.LogToMainWindow(log);
         }
 
         #region IPInputHandling
+
         private void IPInputTectChangedHandling(object sender)
         {
             if (sender is TextBox)

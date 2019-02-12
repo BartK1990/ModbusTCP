@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace ModbusTCP
 {
-    public abstract class LogBase
+
+    public interface ILog
     {
-        public abstract void Log(string message);
+        void Log(string message);
     }
 
-    public class FileLogger : LogBase
+    public class FileLogger : ILog
     {
         private static readonly object locker;
-        public string filePath = Directory.GetCurrentDirectory() + @"IDGLog.txt";
-        public override void Log(string message)
+        private string filePath = Directory.GetCurrentDirectory() + @"IDGLog.txt";
+        public void Log(string message)
         {
             lock (locker)
             {
@@ -26,6 +27,14 @@ namespace ModbusTCP
                     streamWriter.Close();
                 }
             }
+        }
+    }
+
+    public class DatabaseLogger : ILog
+    {
+        public void Log(string message)
+        {
+            throw new NotImplementedException();
         }
     }
 

@@ -42,21 +42,37 @@ namespace ModbusTCP
                 return false;
         }
 
-        public async Task ConnectAsync()
+        public async Task<int> ConnectAsync()
         {
             try
             {
                 if( (IPSlaveAddr != null) && (IPSlavePort > -1))
                 {
-                    using (client = new TcpClient())
-                    {
-                        await client.ConnectAsync(IPSlaveAddr, IPSlavePort);
-                        using (NetworkStream ns = client.GetStream())
-                        {
-
-                        }
-                    }
+                    client = new TcpClient();
+                    await client.ConnectAsync(IPSlaveAddr, IPSlavePort);
+                    return 0; // Connected succsefully
                 }
+                else
+                {
+                    return 1; // Wrong IP adres or Port
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public int Disconnect()
+        {
+            try
+            {
+                if (client.Connected)
+                {
+                    client.Close();
+                    return 0; // Disconnected succsefully
+                }
+                return 1; // Client was not connected
             }
             catch
             {

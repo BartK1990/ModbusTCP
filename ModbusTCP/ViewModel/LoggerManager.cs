@@ -22,7 +22,19 @@ namespace ModbusTCP
             }
         }
 
-        public static void LogMainWindow(string log)
+        public static void LogToFile(string message)
+        {
+            FileLogger FL = new FileLogger();
+            FL.Log(message);  
+        }
+
+        public static void LogToDatabase(string message)
+        {
+            DatabaseLogger DL = new DatabaseLogger();
+            DL.Log(message);
+        }
+
+        public static void LogToMainWindow(string log)
         {
             mw.Logger.Items.Insert(0, new LoggerItem(log));
         }
