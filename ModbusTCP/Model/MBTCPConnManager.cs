@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ModbusTCP
+namespace ModbusTCP.Model
 {
     public class MBTCPConnManager
     {
@@ -41,6 +41,7 @@ namespace ModbusTCP
 
         public async void ConnectAsync()
         {
+            /*
             if(mbtcpConn != null)
             {
                 try
@@ -65,6 +66,7 @@ namespace ModbusTCP
             }
             else
                 LoggerManager.LogToMainWindow("IP address and port not set!");
+            */
         }
 
         public void Disconnect()
@@ -74,6 +76,7 @@ namespace ModbusTCP
                 // implementation
             }
             throw new NotImplementedException();
+            
         }
 
     }

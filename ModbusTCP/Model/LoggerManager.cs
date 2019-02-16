@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace ModbusTCP
+namespace ModbusTCP.Model
 {
     public static class LoggerManager
     {
-        static MainWindow mw = (MainWindow)Application.Current.MainWindow;
+        //static MainWindow mw = (MainWindow)Application.Current.MainWindow;
 
         struct LoggerItem
         {
@@ -33,10 +33,11 @@ namespace ModbusTCP
             DatabaseLogger DL = new DatabaseLogger();
             DL.Log(message);
         }
-
+        /*
         public static void LogToMainWindow(string log)
         {
             mw.Logger.Items.Insert(0, new LoggerItem(log));
         }
+        */
     }
 }

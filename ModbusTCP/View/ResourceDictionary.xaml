@@ -8,6 +8,7 @@
     <Style x:Key="ListViewBackground" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="{StaticResource TextsBackgroundColor}"/>
     </Style>
+    
     <Style x:Key="IPBoxBackground" TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="{StaticResource TextsBackgroundColor}"/>
         <Setter Property="BorderThickness" Value="0"/>

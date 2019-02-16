@@ -13,21 +13,27 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ModbusTCP
+namespace ModbusTCP.UserControls
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for IPInput.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class IPInput : UserControl
     {
         string lastIpAddressPart;
-        MBTCPConnManager mbtcpConnManager;
 
-        public MainWindow()
+        public IPInput()
         {
-            mbtcpConnManager = new MBTCPConnManager();
             InitializeComponent();
         }
+            
+        public String Text
+        {
+            get { return IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text; }
+            //set { SetValue(TextProperty, value); }
+        }
+
+        #region IPInputHandling
 
         private void IPInputPreviewTextInputHandling(object sender, TextBox nextTb, TextCompositionEventArgs e)
         {
@@ -41,22 +47,7 @@ namespace ModbusTCP
             }
         }
 
-        private void Connect_Click(object sender, RoutedEventArgs e)
-        {
-            mbtcpConnManager.ConnectAsync();
-        }
-
-        private void SetIP_Click(object sender, RoutedEventArgs e)
-        {
-            string ipAddr = IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
-            mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
-
-            LoggerManager.LogToMainWindow(log);
-        }
-
-        #region IPInputHandling
-
-        private void IPInputTectChangedHandling(object sender)
+        private void IPInputTextChangedHandling(object sender)
         {
             if (sender is TextBox)
             {
@@ -97,29 +88,24 @@ namespace ModbusTCP
             IPInputPreviewTextInputHandling(sender, null, e);
         }
 
-        private void IPPort_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !((int.TryParse(e.Text, out int i)) && i >= 0 && i <= 65536); // checks if input is number 0...65536
-        }
-
         private void IPAddr1_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IPInputTectChangedHandling(sender);
+            IPInputTextChangedHandling(sender);
         }
 
         private void IPAddr2_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IPInputTectChangedHandling(sender);
+            IPInputTextChangedHandling(sender);
         }
 
         private void IPAddr3_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IPInputTectChangedHandling(sender);
+            IPInputTextChangedHandling(sender);
         }
 
         private void IPAddr4_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IPInputTectChangedHandling(sender);
+            IPInputTextChangedHandling(sender);
         }
         #endregion 
     }
