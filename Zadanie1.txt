@@ -17,11 +17,21 @@ git checkout -b <nazwa_brancha>
 
 2. plik tworzysz normalnie
 
+2a. git status - tutaj jest nowy plik, ktory jeszcze nie jest w repozytorium gitowym
+
 3. dodanie pliku do repozytorium
 git add nazwa_pliku
 
+3a. git status - tutaj jest nowy plik, ktory jest juz w repozytorium gitowym, pradopodobnie swieci sie na inny kolor i trafil na liste tracked files
+
 4. stworzenie commita
 git commit - po kliknięciu musisz wpisać mesga z commitem
+
+4a. sprawdzenie loga
+git log - mozesz zobaczyc tam commita którego stworzyłeś
+
+4b. git status
+po wywolaniu git status dostaniesz informacje ze jestes ahead of 1 commit... oznacza to, ze stworzyles commita lokalnie ale jeszcze go nie wypushowales
 
 5. tworsz nowy plik
 
@@ -29,11 +39,11 @@ git commit - po kliknięciu musisz wpisać mesga z commitem
 
 7. ponownie punkt 4
 
-8. git push - to miało na celu pokazanie, ze lokalnie mozesz miec wiele commitowania
+8. git push - to miało na celu pokazanie, ze lokalnie mozesz miec wiele commitow i wyrzucic je na raz na serwer
 
 prawdopodobnie przy próbie git push dostaniesz informację o --set-upstream... bierze sie to z tego, ze przy tworzeniu nowego brancha, musisz przekazac jeszcze informacje, 
 ze twoj lokalny branch <nazwa> odpowiada branchowi <nazwa> na serwerze (origin to nazwa serwera, mozna to zmienic, ale nigdy sie tego nie robi)... 
 kopiujesz informacje, ktora wypisuje ci git przy probie pusha i robisz jeszcze raz ;)
 
-przełączanie się pomiędzy branchami, które już istnieją
+przełączanie się pomiędzy branchami, które już istnieją (przyda sie)
 git checkout <nazwa_brancha>
