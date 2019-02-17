@@ -1,0 +1,8 @@
+Dobra kolejna lista komend ;):
+
+Zrób 2 losowe commity, nie pushuj! :P Wywal najnowszy i wypushuj tylko ten starszy.
+
+Zakładałem, że będę tu wrzucał podpowiedzi a gotowe rozwiązania w osobnym pliku, tak żebyś spróbował sam, ale nie wiem czy tak chcesz ;)
+Spróbujemy tak teraz, jest plik Zadanie2Odp.txt, ale jak się nie spodoba to będę wrzucać tylko gotowce ;)
+
+git reset

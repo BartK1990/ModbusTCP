@@ -1,0 +1,30 @@
+git reset --hard HEAD~1
+
+zamiast HEAD~1 można użyć hasha commita (te cyferki i literki z git log), ale nie wiem jaki hash będzie tego co dostarczysz ;) 
+HEAD zawsze wskazuje na najnowysz commit ~1 oznacza minus 1 commit, oczywiście cyfra może być dowolna ;).
+
+Ciekawostka ważna!
+po reset --hard tracisz commita bezpowrotnie. Prawie bezpowrotnie ;). Jeszcze przez pewien czas (który, nie jest określony) możesz
+znaleźć hasha Twoich zmian wywołując komendę:
+
+git reflog
+
+git sprząta sobie sam ten reflog, dlatego niewiadomo jak długo będzie ten commit tam obecny
+
+żeby obejrzeć zmiany jakie zmiany zrobiłeś, kiedy już zrobiłeś commita, wywołujesz
+git show HASH_COMMITA
+
+git show = git show HEAD - czyli pokazuje najnowszego commita
+
+kiedy jeszcze nie zrobiłeś commita ani adda:
+git diff
+
+kiedy zrobiłeś adda:
+git diff --staged
+
+git reset --hard działa na wszystko, i na zmiany scommitowane (można odzyskać przez git reflog), i na te które nie były scommitowane (nie da się odzyskać). nie zadziała jednak na zmiany,
+które zostały już wypushowane (lokalnie je usunie, ale nie będziesz w stanie pushować)
+
+żeby nałożyć ponownie zmiany z commita który usunąłeś wywołujesz git reflog, bierzesz hash commita i wywołujesz komendę:
+
+git cherry-pick HASH_Z_REFLOGA
