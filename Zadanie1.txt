@@ -1,0 +1,39 @@
+No brawo, dostałeś się na brancha ;).
+
+Teraz kilka spraw na początek, o których już może wiesz:
+
+jak nie wiesz co się dzieje to zawsze klikasz
+
+git status
+
+pokazuje Ci stan Twojego repozytorium ;)
+
+teraz pierwsze zadanie - stwórz nowego brancha, dodaj jakiś nowy plik, scommituj go, potem dodaj drugi plik, scommituj go osobno i wypchaj do repozytorium ;)
+
+Komendy, to zrobiomy krok po kroku, potem zobaczymy :P
+
+1.Stworzenie nowego brancha:
+git checkout -b <nazwa_brancha>
+
+2. plik tworzysz normalnie
+
+3. dodanie pliku do repozytorium
+git add nazwa_pliku
+
+4. stworzenie commita
+git commit - po kliknięciu musisz wpisać mesga z commitem
+
+5. tworsz nowy plik
+
+6. ponownie punkt 3
+
+7. ponownie punkt 4
+
+8. git push - to miało na celu pokazanie, ze lokalnie mozesz miec wiele commitowania
+
+prawdopodobnie przy próbie git push dostaniesz informację o --set-upstream... bierze sie to z tego, ze przy tworzeniu nowego brancha, musisz przekazac jeszcze informacje, 
+ze twoj lokalny branch <nazwa> odpowiada branchowi <nazwa> na serwerze (origin to nazwa serwera, mozna to zmienic, ale nigdy sie tego nie robi)... 
+kopiujesz informacje, ktora wypisuje ci git przy probie pusha i robisz jeszcze raz ;)
+
+przełączanie się pomiędzy branchami, które już istnieją
+git checkout <nazwa_brancha>
