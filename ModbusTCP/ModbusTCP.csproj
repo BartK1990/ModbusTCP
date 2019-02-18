@@ -82,7 +82,7 @@
     <Compile Include="UserControls\IPPortInput.xaml.cs">
       <DependentUpon>IPPortInput.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\MBConnectViewModel.cs" />
     <Page Include="View\ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

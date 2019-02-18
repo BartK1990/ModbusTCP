@@ -39,8 +39,9 @@ namespace ModbusTCP.View
 
         private void SetIP_Click(object sender, RoutedEventArgs e)
         {
-
+            
             string ipAddr = IPInputBox.Text;
+            
             //mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
 
             //LoggerManager.LogToMainWindow(log);

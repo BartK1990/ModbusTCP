@@ -5,9 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModbusTCP.View"
         xmlns:UserControls="clr-namespace:ModbusTCP.UserControls"
+        xmlns:viewmodel="clr-namespace:ModbusTCP.ViewModel"
         mc:Ignorable="d"
         Title="MBConnect" Height="450" Width="560" MinWidth="560" Background="{StaticResource WindowBackgroundColor}">
-    <Grid>
+    <Window.Resources>
+        <viewmodel:MBConnectViewModel x:Key="viewModel" x:Name="viewModel"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource ResourceKey=viewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="28"/>
@@ -22,10 +26,10 @@
             <Button Margin="40 0 0 0" x:Name="Connect" Content="CONNECT" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="90" FontSize="16" Click="Connect_Click"/>
         </StackPanel>
         <DockPanel Grid.Row="3" Margin="10,10,10,10">
-            <DataGrid AutoGenerateColumns="False" x:Name="Logger" CanUserAddRows="True" Margin="0,0,0,0">
+            <DataGrid AutoGenerateColumns="False" x:Name="Logger" ItemsSource="{Binding loggerItems}" CanUserAddRows="True" Margin="0,0,0,0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Time" IsReadOnly="True" Binding="{Binding Time}" Width="100"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Log" IsReadOnly="True"  Binding="{Binding Log}" Width="*"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Time" IsReadOnly="True" Binding="{Binding Time}"  Width="100"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Log" IsReadOnly="True" Binding="{Binding Log}" Width="*"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
