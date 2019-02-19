@@ -18,25 +18,50 @@ namespace ModbusTCP.UserControls
     /// <summary>
     /// Interaction logic for IPInput.xaml
     /// </summary>
-    public partial class IPInput : UserControl
+    public partial class IPTextBox : UserControl
     {
         string lastIpAddressPart;
 
-        public IPInput()
+        public IPTextBox()
         {
             InitializeComponent();
         }
             
-        public String Text
+        public string Address
         {
-            get { return IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text; }
-            set { SetValue(TextProperty, value); }
+            get { return (string)GetValue(AddressProperty); }
+            set { SetValue(AddressProperty, value); }
+        }
+        public static readonly DependencyProperty AddressProperty =
+           DependencyProperty.Register("Address", typeof(string), typeof(IPTextBox), new FrameworkPropertyMetadata(default(string), AddressChanged)
+           {
+               BindsTwoWayByDefault = true
+           });
+
+        private static void AddressChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        {
+            var ipTextBox = dependencyObject as IPTextBox;
+            var text = e.NewValue as string;
+
+            //if (text != null && ipTextBox != null)
+            //{
+            //    ipTextBox._suppressAddressUpdate = true;
+            //    var i = 0;
+            //    foreach (var segment in text.Split('.'))
+            //    {
+            //        ipTextBox._segments[i].Text = segment;
+            //        i++;
+            //    }
+            //    ipTextBox._suppressAddressUpdate = false;
+            //}
         }
 
-        public static DependencyProperty TextProperty =
-           DependencyProperty.Register("Text", typeof(string), typeof(IPInput));
-
         #region IPInputHandling
+
+        private string ReturnAddress()
+        {
+            return IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
+        }
 
         private void IPInputPreviewTextInputHandling(object sender, TextBox nextTb, TextCompositionEventArgs e)
         {
@@ -48,6 +73,7 @@ namespace ModbusTCP.UserControls
                 TextBox tb = sender as TextBox;
                 lastIpAddressPart = tb.Text;
             }
+            Address = ReturnAddress();
         }
 
         private void IPInputTextChangedHandling(object sender)
@@ -64,6 +90,7 @@ namespace ModbusTCP.UserControls
                     }
                 }
             }
+            Address = ReturnAddress();
         }
 
         private bool IPPartInRange(int i)

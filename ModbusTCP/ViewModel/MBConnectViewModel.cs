@@ -52,13 +52,11 @@ namespace ModbusTCP.ViewModel
         public string IPText
         {
             get { return iPText; }
-            /*
             set
             {
                 iPText = value;
                 OnPropertyChanged("IPText");
             }
-            */
         }
 
         private ObservableCollection<LoggerItem> loggerItems = new ObservableCollection<LoggerItem>();

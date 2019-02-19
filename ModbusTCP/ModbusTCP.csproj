@@ -62,7 +62,7 @@
     <Compile Include="View\MBConnect.xaml.cs">
       <DependentUpon>MBConnect.xaml</DependentUpon>
     </Compile>
-    <Page Include="UserControls\IPInput.xaml">
+    <Page Include="UserControls\IPTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -76,8 +76,8 @@
     </Compile>
     <Compile Include="Model\Logger.cs" />
     <Compile Include="Model\LoggerManager.cs" />
-    <Compile Include="UserControls\IPInput.xaml.cs">
-      <DependentUpon>IPInput.xaml</DependentUpon>
+    <Compile Include="UserControls\IPTextBox.xaml.cs">
+      <DependentUpon>IPTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\IPPortInput.xaml.cs">
       <DependentUpon>IPPortInput.xaml</DependentUpon>
