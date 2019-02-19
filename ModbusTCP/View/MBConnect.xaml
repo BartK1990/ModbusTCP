@@ -8,10 +8,10 @@
         xmlns:viewmodel="clr-namespace:ModbusTCP.ViewModel"
         mc:Ignorable="d"
         Title="MBConnect" Height="450" Width="560" MinWidth="560" Background="{StaticResource WindowBackgroundColor}">
-    <Window.Resources>
-        <viewmodel:MBConnectViewModel x:Key="viewModel" x:Name="viewModel"/>
-    </Window.Resources>
-    <Grid DataContext="{StaticResource ResourceKey=viewModel}">
+    <Window.DataContext>
+        <viewmodel:MBConnectViewModel/>
+    </Window.DataContext>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="28"/>
@@ -19,14 +19,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Height="28" Margin="10,0,0,0" >
-            <Button x:Name="SetIP" Content="SET IP" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="80" Click="SetIP_Click" FontSize="16"/>
+            <Button x:Name="SetIP" Content="SET IP" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="80" Command="{Binding SetIPCommand}" CommandParameter="{Binding Text, ElementName=IPInputBox}" FontSize="16"/>
             <UserControls:IPInput x:Name="IPInputBox" Margin="20 0 0 0"/>
             <TextBox Margin="10 0 0 0" Style="{StaticResource IPBoxBackground}" x:Name="IPPortDesc" IsReadOnly="True" Focusable="False" VerticalAlignment="Top" HorizontalAlignment="Left" Height="28" TextAlignment="Center" VerticalContentAlignment="Center" Width="60" FontSize="16" Text="PORT:"/>
             <TextBox Margin="10 0 0 0" Style="{StaticResource IPBoxBackground}" x:Name="IPPort" MaxLength="5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" TextAlignment="Center" VerticalContentAlignment="Center" Width="54" FontSize="16" PreviewTextInput="IPPort_PreviewTextInput"/>
             <Button Margin="40 0 0 0" x:Name="Connect" Content="CONNECT" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="90" FontSize="16" Click="Connect_Click"/>
         </StackPanel>
         <DockPanel Grid.Row="3" Margin="10,10,10,10">
-            <DataGrid AutoGenerateColumns="False" x:Name="Logger" ItemsSource="{Binding loggerItems}" CanUserAddRows="True" Margin="0,0,0,0">
+            <DataGrid AutoGenerateColumns="False" x:Name="Logger" ItemsSource="{Binding LoggerItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" Margin="0,0,0,0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Time" IsReadOnly="True" Binding="{Binding Time}"  Width="100"></DataGridTextColumn>
                     <DataGridTextColumn Header="Log" IsReadOnly="True" Binding="{Binding Log}" Width="*"></DataGridTextColumn>

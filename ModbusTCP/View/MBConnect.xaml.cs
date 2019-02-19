@@ -19,17 +19,9 @@ namespace ModbusTCP.View
     /// </summary>
     public partial class MBConnect : Window
     {
-        string lastIpAddressPart;
-        //MBTCPConnManager mbtcpConnManager;
-
         public MBConnect()
         {
             InitializeComponent();
-        }
-
-        private void IPPort_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !((int.TryParse(e.Text, out int i)) && i >= 0 && i <= 65536); // checks if input is number 0...65536
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)
@@ -37,15 +29,9 @@ namespace ModbusTCP.View
             //mbtcpConnManager.ConnectAsync();
         }
 
-        private void SetIP_Click(object sender, RoutedEventArgs e)
+        private void IPPort_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            
-            string ipAddr = IPInputBox.Text;
-            
-            //mbtcpConnManager.SetSlaveIPAddrAndPort(ipAddr, IPPort.Text, out string log);
 
-            //LoggerManager.LogToMainWindow(log);
         }
-
     }
 }

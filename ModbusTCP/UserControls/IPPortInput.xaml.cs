@@ -24,5 +24,15 @@ namespace ModbusTCP.UserControls
         {
             InitializeComponent();
         }
+
+        private void IPPort_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !((int.TryParse(e.Text, out int i)) && i >= 0 && i <= 65536); // checks if input is number 0...65536
+        }
+
+        public String Text
+        {
+            get { return IPPort.Text; }
+        }
     }
 }

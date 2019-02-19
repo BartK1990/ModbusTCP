@@ -30,8 +30,11 @@ namespace ModbusTCP.UserControls
         public String Text
         {
             get { return IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text; }
-            //set { SetValue(TextProperty, value); }
+            set { SetValue(TextProperty, value); }
         }
+
+        public static DependencyProperty TextProperty =
+           DependencyProperty.Register("Text", typeof(string), typeof(IPInput));
 
         #region IPInputHandling
 
