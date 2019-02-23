@@ -68,7 +68,7 @@ namespace ModbusTCP.UserControls
             return IPAddr1.Text + '.' + IPAddr2.Text + '.' + IPAddr3.Text + '.' + IPAddr4.Text;
         }
 
-        private void IPInputPreviewTextInputHandling(object sender, TextBox nextTb, TextCompositionEventArgs e)
+        private void IPTextBoxPreviewTextInputHandling(object sender, TextBox nextTb, TextCompositionEventArgs e)
         {
             if (e.Text == "." && nextTb != null)
                 nextTb.Focus();
@@ -78,10 +78,10 @@ namespace ModbusTCP.UserControls
                 TextBox tb = sender as TextBox;
                 lastIpAddressPart = tb.Text;
             }
-            Address = ReturnAddress();
+            //Address = ReturnAddress();
         }
 
-        private void IPInputTextChangedHandling(object sender)
+        private void IPTextBoxTextChangedHandling(object sender)
         {
             if (sender is TextBox)
             {
@@ -105,42 +105,42 @@ namespace ModbusTCP.UserControls
 
         private void IPAddr1_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            IPInputPreviewTextInputHandling(sender, IPAddr2, e);
+            IPTextBoxPreviewTextInputHandling(sender, IPAddr2, e);
         }
 
         private void IPAddr2_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            IPInputPreviewTextInputHandling(sender, IPAddr3, e);
+            IPTextBoxPreviewTextInputHandling(sender, IPAddr3, e);
         }
 
         private void IPAddr3_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            IPInputPreviewTextInputHandling(sender, IPAddr4, e);
+            IPTextBoxPreviewTextInputHandling(sender, IPAddr4, e);
         }
 
         private void IPAddr4_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            IPInputPreviewTextInputHandling(sender, null, e);
+            IPTextBoxPreviewTextInputHandling(sender, null, e);
         }
 
         private void IPAddr1_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IPInputTextChangedHandling(sender);
+            IPTextBoxTextChangedHandling(sender);
         }
 
         private void IPAddr2_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IPInputTextChangedHandling(sender);
+            IPTextBoxTextChangedHandling(sender);
         }
 
         private void IPAddr3_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IPInputTextChangedHandling(sender);
+            IPTextBoxTextChangedHandling(sender);
         }
 
         private void IPAddr4_TextChanged(object sender, TextChangedEventArgs e)
         {
-            IPInputTextChangedHandling(sender);
+            IPTextBoxTextChangedHandling(sender);
         }
         #endregion 
     }

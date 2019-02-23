@@ -7,6 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="28" d:DesignWidth="54">
     <Grid>
-        <TextBox Style="{StaticResource IPBoxBackground}" x:Name="IPPort" MaxLength="5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" TextAlignment="Center" VerticalContentAlignment="Center" Width="54" FontSize="16" PreviewTextInput="IPPort_PreviewTextInput"/>
+        <TextBox Style="{StaticResource IPBoxBackground}" x:Name="IPPort" MaxLength="5" VerticalAlignment="Top" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" TextAlignment="Center" VerticalContentAlignment="Center" Width="54" FontSize="16" PreviewTextInput="IPPort_PreviewTextInput" TextChanged="IPPort_TextChanged"/>
     </Grid>
 </UserControl>

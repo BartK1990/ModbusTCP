@@ -20,11 +20,13 @@ namespace ModbusTCP.UserControls
     /// </summary>
     public partial class IPPortTextBox : UserControl
     {
-
+        string lastPort;
+        private readonly TextBox portTextBox;
 
         public IPPortTextBox()
         {
             InitializeComponent();
+            portTextBox = IPPort;
         }
 
         public string Port
@@ -42,16 +44,42 @@ namespace ModbusTCP.UserControls
         {
             var ipPortTextBox = dependencyObject as IPPortTextBox;
             var text = e.NewValue as string;
-
             if (text != null && ipPortTextBox != null)
-                ipPortTextBox._segments[i].Text = segment;
+                ipPortTextBox.portTextBox.Text = text;
         }
 
         #region Input handling
 
+        private bool PortInRange(int i) // checks if input is number 0...65536
+        {
+            return (i >= 0 && i <= 65536) ? true : false;
+        }
+
         private void IPPort_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !((int.TryParse(e.Text, out int i)) && i >= 0 && i <= 65536); // checks if input is number 0...65536
+            e.Handled = !((int.TryParse(e.Text, out int i)) && PortInRange(i)); 
+            if (sender is TextBox)
+            {
+                TextBox tb = sender as TextBox;
+                lastPort = tb.Text;
+            }
+            //Port = IPPort.Text;
+        }
+
+        private void IPPort_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is TextBox)
+            {
+                TextBox tb = sender as TextBox;
+                if (int.TryParse((tb.Text), out int i))
+                {
+                    if (!PortInRange(i))
+                    {
+                        tb.Text = lastPort;
+                        tb.SelectionStart = tb.Text.Length;
+                    }
+                }
+            }
             Port = IPPort.Text;
         }
 
