@@ -95,17 +95,17 @@ namespace ModbusTCP.ViewModel
 
         public void ShowMsgTest()
         {
-            LoggerItemAdd("TEST");
+            SetSlaveIPAddrAndPort();
         }
 
-        public void SetSlaveIPAddrAndPort(string ipAddr, string port)
+        public void SetSlaveIPAddrAndPort()
         {
-            if (!int.TryParse(port, out int portInt))
+            if (!int.TryParse(IPPortText, out int portInt))
             {
                 LoggerItemAdd("Wrong IP port");
             }
 
-            if (_mbtcpconn.SetSlaveIPAddr(ipAddr))
+            if (_mbtcpconn.SetSlaveIPAddr(IPAddressText))
             {
                 if (_mbtcpconn.SetSlaveIPPort(portInt))
                 {
