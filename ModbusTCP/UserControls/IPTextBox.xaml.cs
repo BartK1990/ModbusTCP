@@ -22,9 +22,15 @@ namespace ModbusTCP.UserControls
     {
         string lastIpAddressPart;
 
+        private readonly List<TextBox> _segments = new List<TextBox>();
+
         public IPTextBox()
         {
             InitializeComponent();
+            _segments.Add(IPAddr1);
+            _segments.Add(IPAddr2);
+            _segments.Add(IPAddr3);
+            _segments.Add(IPAddr4);
         }
             
         public string Address
@@ -42,18 +48,17 @@ namespace ModbusTCP.UserControls
         {
             var ipTextBox = dependencyObject as IPTextBox;
             var text = e.NewValue as string;
+            string[] segments = new string[4];
 
-            //if (text != null && ipTextBox != null)
-            //{
-            //    ipTextBox._suppressAddressUpdate = true;
-            //    var i = 0;
-            //    foreach (var segment in text.Split('.'))
-            //    {
-            //        ipTextBox._segments[i].Text = segment;
-            //        i++;
-            //    }
-            //    ipTextBox._suppressAddressUpdate = false;
-            //}
+            if (text != null && ipTextBox != null)
+            {
+                var i = 0;
+                foreach (var segment in text.Split('.'))
+                {
+                    ipTextBox._segments[i].Text = segment;
+                    i++;
+                }
+            }
         }
 
         #region IPInputHandling

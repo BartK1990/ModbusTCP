@@ -66,7 +66,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\IPPortInput.xaml">
+    <Page Include="UserControls\IPPortTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -79,8 +79,8 @@
     <Compile Include="UserControls\IPTextBox.xaml.cs">
       <DependentUpon>IPTextBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\IPPortInput.xaml.cs">
-      <DependentUpon>IPPortInput.xaml</DependentUpon>
+    <Compile Include="UserControls\IPPortTextBox.xaml.cs">
+      <DependentUpon>IPPortTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MBConnectViewModel.cs" />
     <Page Include="View\ResourceDictionary.xaml">

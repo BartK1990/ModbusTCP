@@ -28,10 +28,5 @@ namespace ModbusTCP.View
         {
             //mbtcpConnManager.ConnectAsync();
         }
-
-        private void IPPort_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-
-        }
     }
 }

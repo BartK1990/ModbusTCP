@@ -48,14 +48,25 @@ namespace ModbusTCP.ViewModel
     {
         private MBTCPConn _mbtcpconn = new MBTCPConn();
 
-        private string iPText;
-        public string IPText
+        private string iPAddressText;
+        public string IPAddressText
         {
-            get { return iPText; }
+            get { return iPAddressText; }
             set
             {
-                iPText = value;
-                OnPropertyChanged("IPText");
+                iPAddressText = value;
+                OnPropertyChanged("IPAddressText");
+            }
+        }
+
+        private string iPPortText;
+        public string IPPortText
+        {
+            get { return iPPortText; }
+            set
+            {
+                iPPortText = value;
+                OnPropertyChanged("IPPortText");
             }
         }
 
