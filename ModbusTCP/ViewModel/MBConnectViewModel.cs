@@ -22,28 +22,6 @@ namespace ModbusTCP.ViewModel
         }
     }
 
-    public class RelayCommand : ICommand
-    {
-        private Action _action;
-        private Func<bool> canExecute;
-        public RelayCommand(Action action, Func<bool> canExecute)
-        {
-            this._action = action;
-            this.canExecute = canExecute;
-        }
-
-        public event EventHandler CanExecuteChanged;
-        public bool CanExecute(object parameter)
-        {
-            return canExecute();
-        }
-
-        public void Execute(object parameter)
-        {
-            _action();
-        }
-    }
-
     public class MBConnectViewModel : INotifyPropertyChanged
     {
         private MBTCPConn _mbtcpconn = new MBTCPConn();
@@ -103,6 +81,7 @@ namespace ModbusTCP.ViewModel
             if (!int.TryParse(IPPortText, out int portInt))
             {
                 LoggerItemAdd("Wrong IP port");
+                return;
             }
 
             if (_mbtcpconn.SetSlaveIPAddr(IPAddressText))
@@ -110,15 +89,18 @@ namespace ModbusTCP.ViewModel
                 if (_mbtcpconn.SetSlaveIPPort(portInt))
                 {
                     LoggerItemAdd("IP address Set");
+                    return;
                 }
                 else
                 {
                     LoggerItemAdd("Wrong IP port");
+                    return;
                 }
             }
             else
             {
                 LoggerItemAdd("Wrong IP address format");
+                return;
             }
         }
 

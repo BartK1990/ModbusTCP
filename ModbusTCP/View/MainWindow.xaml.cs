@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace ModbusTCP.View
 {
     /// <summary>
-    /// Interaction logic for MBConnect.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MBConnect : Window
+    public partial class MainWindow : Window
     {
-        public MBConnect()
+        public MainWindow()
         {
             InitializeComponent();
         }

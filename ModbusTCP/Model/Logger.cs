@@ -38,4 +38,12 @@ namespace ModbusTCP.Model
         }
     }
 
+    public class WindowLogger : ILog
+    {
+        public void Log(string message)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

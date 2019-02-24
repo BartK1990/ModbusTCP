@@ -59,8 +59,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="View\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MBConnect.xaml.cs">
       <DependentUpon>MBConnect.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MBConnectView.xaml.cs">
+      <DependentUpon>MBConnectView.xaml</DependentUpon>
     </Compile>
     <Page Include="UserControls\IPTextBox.xaml">
       <SubType>Designer</SubType>
@@ -83,6 +90,14 @@
       <DependentUpon>IPPortTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MBConnectViewModel.cs" />
+    <Page Include="View\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MBConnectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

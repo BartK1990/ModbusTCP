@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ModbusTCP.View
 {
     /// <summary>
-    /// Interaction logic for MBConnect.xaml
+    /// Interaction logic for MBConnectView.xaml
     /// </summary>
-    public partial class MBConnect : Window
+    public partial class MBConnectView : UserControl
     {
-        public MBConnect()
+        public MBConnectView()
         {
             InitializeComponent();
         }
