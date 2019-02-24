@@ -4,6 +4,9 @@ teraz mergowanie branchy i zgrywanie zmian.
 
 Stworzyłem brancha merging. Bedąc na gitmaster, spróbuj zaciągnąć zmiany z merging. Uzyteczne polecenia to git merge i git rebase.
 
+Zeby kasować zmiany z merga i sprować rebase, użyj git reset --hard, co już robiłeś :P.
+ 
 Oba wyplują prawdopodbnie taki sam rezultat. Jednak merge i rebase zachowują się trochę inaczej. Najlepiej znajdź sobie coś na youtube
 (ale wpadaj na szachy :P) a żeby zasymulować teraz działanie użyj git merge --no-ff . Fajnie sobie ogarnąć co to jest fast forward i 
-czym się róźni merge od rebase bo dla mnie to standardowe pytanie kwalifikacyjne :P
+czym się róźni merge od rebase bo dla mnie to standardowe pytanie kwalifikacyjne :P. Różnice jak to działa możesz znaleźć wywołując polecenie
+git gui (pokaże ci wszystkie commity i takie drzewko)
