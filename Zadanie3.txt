@@ -10,3 +10,5 @@ Oba wyplują prawdopodbnie taki sam rezultat. Jednak merge i rebase zachowują s
 (ale wpadaj na szachy :P) a żeby zasymulować teraz działanie użyj git merge --no-ff . Fajnie sobie ogarnąć co to jest fast forward i 
 czym się róźni merge od rebase bo dla mnie to standardowe pytanie kwalifikacyjne :P. Różnice jak to działa możesz znaleźć wywołując polecenie
 git gui (pokaże ci wszystkie commity i takie drzewko)
+
+Tutaj jest zmiana z brancha merging ;)
