@@ -1,0 +1,9 @@
+Ok, wreszcie udalo mi sie usiasc do kompa :P
+
+teraz mergowanie branchy i zgrywanie zmian.
+
+Stworzyłem brancha merging. Bedąc na gitmaster, spróbuj zaciągnąć zmiany z merging. Uzyteczne polecenia to git merge i git rebase.
+
+Oba wyplują prawdopodbnie taki sam rezultat. Jednak merge i rebase zachowują się trochę inaczej. Najlepiej znajdź sobie coś na youtube
+(ale wpadaj na szachy :P) a żeby zasymulować teraz działanie użyj git merge --no-ff . Fajnie sobie ogarnąć co to jest fast forward i 
+czym się róźni merge od rebase bo dla mnie to standardowe pytanie kwalifikacyjne :P
