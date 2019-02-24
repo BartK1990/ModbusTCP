@@ -19,23 +19,12 @@
             <RowDefinition Height="200"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <DockPanel Grid.Row="0">
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_File">
-                    <MenuItem Header="_New" />
-                    <MenuItem Header="_Open" />
-                    <MenuItem Header="_Save" />
-                    <Separator />
-                    <MenuItem Header="_Exit" />
-                </MenuItem>
-            </Menu>
-        </DockPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Height="28" Margin="10,0,0,0" >
             <Button x:Name="SetIP" Content="SET IP" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="80" Command="{Binding SetIPCommand}" CommandParameter="{Binding Text, ElementName=IPInputBox}" FontSize="16"/>
             <UserControls:IPTextBox x:Name="IPTextBox" Address="{Binding IPAddressText}" Margin="20 0 0 0"/>
             <TextBox Margin="10 0 0 0" Style="{StaticResource IPBoxBackground}" x:Name="IPPortDesc" IsReadOnly="True" Focusable="False" VerticalAlignment="Top" HorizontalAlignment="Left" Height="28" TextAlignment="Center" VerticalContentAlignment="Center" Width="60" FontSize="16" Text="PORT:"/>
             <UserControls:IPPortTextBox x:Name="IPPortTextBox" Port="{Binding IPPortText}" Margin="10 0 0 0"/>
-            <Button Margin="40 0 0 0" x:Name="Connect" Content="CONNECT" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="90" FontSize="16" Click="Connect_Click"/>
+            <Button Margin="40 0 0 0" x:Name="Connect" Content="CONNECT" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="90" FontSize="16"/>
         </StackPanel>
         <DockPanel Grid.Row="4" Margin="10,10,10,10">
             <DataGrid AutoGenerateColumns="False" x:Name="Logger" ItemsSource="{Binding LoggerItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" Margin="0,0,0,0">

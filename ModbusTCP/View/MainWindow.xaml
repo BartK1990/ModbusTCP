@@ -5,8 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModbusTCP.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="660" MinHeight="450" MinWidth="660" Background="{StaticResource WindowBackgroundColor}">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New" />
+                    <MenuItem Header="_Open" />
+                    <MenuItem Header="_Save" />
+                    <Separator />
+                    <MenuItem Header="_Exit" />
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Button x:Name="MenuConnect_button" Margin="0 20 0 0" Height="30" Content="Connect" Click="MenuConnect_button_Click"/>
+            <Button Margin="0 20 0 0" Height="30" Content="Undefined"/>
+        </StackPanel>
+        <DockPanel Grid.Row="1" Grid.Column="1">
+            <ContentControl x:Name="WindowContent"/>
+        </DockPanel>
     </Grid>
 </Window>

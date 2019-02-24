@@ -23,5 +23,10 @@ namespace ModbusTCP.View
         {
             InitializeComponent();
         }
+
+        private void MenuConnect_button_Click(object sender, RoutedEventArgs e)
+        {
+            WindowContent.Content = new MBConnectView();
+        }
     }
 }
