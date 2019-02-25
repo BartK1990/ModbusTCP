@@ -38,11 +38,30 @@ namespace ModbusTCP.Model
         }
     }
 
+    public class LoggerEventArgs : EventArgs
+    {
+        public string Log { get; private set; }
+        public LoggerEventArgs(string log)
+        {
+            Log = log;
+        }
+    }
+
     public class WindowLogger : ILog
     {
         public void Log(string message)
         {
-            throw new NotImplementedException();
+            OnLoggerUpdated(message);
+        }
+
+        public event EventHandler<LoggerEventArgs> LoggerUpdated;
+        private void OnLoggerUpdated(string log)
+        {
+            EventHandler<LoggerEventArgs> loggerUpdated = LoggerUpdated;
+            if (loggerUpdated != null)
+            {
+                loggerUpdated(this, new LoggerEventArgs(log));
+            }
         }
     }
 

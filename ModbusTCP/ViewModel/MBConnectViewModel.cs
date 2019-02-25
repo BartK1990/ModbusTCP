@@ -23,7 +23,15 @@ namespace ModbusTCP.ViewModel
 
     public class MBConnectViewModel : ObservableObject
     {
-        private MBTCPConn _mbtcpconn = new MBTCPConn();
+        private WindowLogger logger = new WindowLogger();
+        private MBTCPConn _mbtcpconn;
+
+        public MBConnectViewModel()
+        {
+            logger.LoggerUpdated += LoggerUpdatedEventHandler;
+            _mbtcpconn = new MBTCPConn(logger);
+        }
+  
         public ObservableCollection<LoggerItem> LoggerItems { get; set; } = new ObservableCollection<LoggerItem>();
 
         private string ipAddressText;
@@ -57,7 +65,6 @@ namespace ModbusTCP.ViewModel
         {
             if (!int.TryParse(IPPortText, out int portInt))
             {
-                LoggerItemAdd("Wrong IP port");
                 return;
             }
 
@@ -65,20 +72,22 @@ namespace ModbusTCP.ViewModel
             {
                 if (_mbtcpconn.SetSlaveIPPort(portInt))
                 {
-                    LoggerItemAdd("IP address Set");
                     return;
                 }
                 else
                 {
-                    LoggerItemAdd("Wrong IP port");
                     return;
                 }
             }
             else
             {
-                LoggerItemAdd("Wrong IP address format");
                 return;
             }
+        }
+
+        private void LoggerUpdatedEventHandler(object sender, LoggerEventArgs e)
+        {
+            LoggerItemAdd(e.Log);
         }
 
         private void LoggerItemAdd(string log)

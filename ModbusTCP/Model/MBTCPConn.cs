@@ -14,6 +14,7 @@ namespace ModbusTCP.Model
         private TcpClient client;
         public IPAddress IPSlaveAddr { get; private set; }
         public int IPSlavePort { get; private set; }
+        private WindowLogger logger = new WindowLogger();
 
         public MBTCPConn()
         {
@@ -25,6 +26,7 @@ namespace ModbusTCP.Model
             if(IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
                 IPSlaveAddr = ip;
+                logger.Log("Ip Address Set");
                 return true;
             }
             else
