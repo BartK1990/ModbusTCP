@@ -8,7 +8,6 @@ namespace ModbusTCP.ViewModel
 {
     using Model;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.Windows.Input;
 
     public struct LoggerItem
@@ -22,58 +21,36 @@ namespace ModbusTCP.ViewModel
         }
     }
 
-    public class MBConnectViewModel : INotifyPropertyChanged
+    public class MBConnectViewModel : ObservableObject
     {
         private MBTCPConn _mbtcpconn = new MBTCPConn();
+        public ObservableCollection<LoggerItem> LoggerItems { get; set; } = new ObservableCollection<LoggerItem>();
 
-        private string iPAddressText;
+        private string ipAddressText;
         public string IPAddressText
         {
-            get { return iPAddressText; }
-            set
-            {
-                iPAddressText = value;
-                OnPropertyChanged("IPAddressText");
-            }
+            get { return this.ipAddressText; }
+            set { this.SetAndNotify(ref this.ipAddressText, value, () => this.IPAddressText); }
         }
 
-        private string iPPortText;
+        private string ipPortText;
         public string IPPortText
         {
-            get { return iPPortText; }
-            set
+            get { return this.ipPortText; }
+            set { this.SetAndNotify(ref this.ipPortText, value, () => this.IPPortText); }
+        }
+
+        private ICommand _setIPCommand;
+        public ICommand SetIPCommand
+        {
+            get
             {
-                iPPortText = value;
-                OnPropertyChanged("IPPortText");
+                return _setIPCommand ?? (_setIPCommand = new RelayCommand(
+                   x =>
+                   {
+                        SetSlaveIPAddrAndPort();
+                   }, x => true));
             }
-        }
-
-        private ObservableCollection<LoggerItem> loggerItems = new ObservableCollection<LoggerItem>();
-        public ObservableCollection<LoggerItem> LoggerItems
-        {
-            get { return loggerItems; }
-
-            set
-            {
-                loggerItems = value;
-                OnPropertyChanged("LoggerItems");
-            }
-        }
-
-        public ICommand SetIPCommand { get; }
-        public MBConnectViewModel()
-        {
-            SetIPCommand = new RelayCommand(ShowMsgTest, () => true);
-        }
-
-        private void LoggerItemAdd(string log)
-        {
-            loggerItems.Add(new LoggerItem(log));
-        }
-
-        public void ShowMsgTest()
-        {
-            SetSlaveIPAddrAndPort();
         }
 
         public void SetSlaveIPAddrAndPort()
@@ -104,12 +81,9 @@ namespace ModbusTCP.ViewModel
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
+        private void LoggerItemAdd(string log)
         {
-            PropertyChangedEventHandler propertyChanged = PropertyChanged;
-            if (propertyChanged != null)
-                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            LoggerItems.Add(new LoggerItem(log));
         }
     }
 }
