@@ -14,6 +14,8 @@ namespace ModbusTCP.Model
         private TcpClient client;
         public IPAddress IPSlaveAddr { get; private set; }
         public int IPSlavePort { get; private set; }
+        private bool ipAddrSet = false;
+        private bool ipPortSet = false;
         private ILog logger;
 
         public MBTCPConn(ILog logger)
@@ -33,27 +35,34 @@ namespace ModbusTCP.Model
                 logger.Log(message);
         }
 
-        public bool SetSlaveIPAddr(string ipAddr) // true if success and false if fault
+        public int SetSlaveIPAddr(string ipAddr) 
         {
             if(IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
                 IPSlaveAddr = ip;
                 Log("Ip Address Set");
-                return true;
+                return 0;
             }
             else
-                return false;
+            {
+                Log("Ip Address setting fault");
+                return 1;
+            }
         }
 
-        public bool SetSlaveIPPort(int port) // true if success and false if fault
+        public int SetSlaveIPPort(int port)
         {
             if ((port >= 0) && (port <= 65535))
             {
                 IPSlavePort = port;
-                return true;
+                Log("Ip Port set");
+                return 0;
             }
             else
-                return false;
+            {
+                Log("Ip Port setting fault");
+                return 1;
+            }
         }
 
         public async Task<int> ConnectAsync()
@@ -64,11 +73,13 @@ namespace ModbusTCP.Model
                 {
                     client = new TcpClient();
                     await client.ConnectAsync(IPSlaveAddr, IPSlavePort);
-                    return 0; // Connected succsefully
+                    Log("Connected to IP:" + IPSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                    return 0;
                 }
                 else
                 {
-                    return 1; // Wrong IP adres or Port
+                    Log("Connection error at IP:" + IPSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                    return 1;
                 }
             }
             catch
@@ -84,14 +95,21 @@ namespace ModbusTCP.Model
                 if (client.Connected)
                 {
                     client.Close();
-                    return 0; // Disconnected succsefully
+                    Log("Disconnected succesfully");
+                    return 0; 
                 }
-                return 1; // Client was not connected
+                Log("Disconnecting fault. There was no connection");
+                return 1;
             }
             catch
             {
                 throw;
             }
+        }
+
+        public void SendData()
+        {
+
         }
     }
 }

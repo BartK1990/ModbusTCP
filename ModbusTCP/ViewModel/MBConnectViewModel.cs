@@ -53,28 +53,36 @@ namespace ModbusTCP.ViewModel
             }
         }
 
+        private ICommand _connectCommand;
+        public ICommand ConnectCommand
+        {
+            get
+            {
+                return _connectCommand ?? (_connectCommand = new RelayCommand(
+                   x =>
+                   {
+                       Connect();
+                   }, x => true));
+            }
+        }
+
         public void SetSlaveIPAddrAndPort()
         {
+            _mbtcpconn.SetSlaveIPAddr(IPAddressText);
             if (!int.TryParse(IPPortText, out int portInt))
             {
-                return;
+                _mbtcpconn.SetSlaveIPPort(portInt);
             }
+        }
 
-            if (_mbtcpconn.SetSlaveIPAddr(IPAddressText))
-            {
-                if (_mbtcpconn.SetSlaveIPPort(portInt))
-                {
-                    return;
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else
-            {
-                return;
-            }
+        public void Connect()
+        {
+            _mbtcpconn.ConnectAsync();
+        }
+
+        public void Disconnect()
+        {
+            _mbtcpconn.Disconnect();
         }
 
         private void LoggerUpdatedEventHandler(object sender, LoggerEventArgs e)
