@@ -10,6 +10,8 @@ namespace ModbusTCP.ViewModel
     using System.Collections.ObjectModel;
     using System.Windows.Input;
 
+    using ModbusTCP;
+
     public struct LoggerListBoxItem
     {
         public string Log { get; set; }
@@ -28,7 +30,7 @@ namespace ModbusTCP.ViewModel
 
         public MBConnectViewModel()
         {
-            logger = new WindowLogger();
+            logger = App.WinLogger;
             logger.LoggerUpdated += LoggerUpdatedEventHandler;
             _mbtcpconn = new MBTCPConn(logger);
         }
