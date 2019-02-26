@@ -59,8 +59,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\LoggerListBoxItem.cs" />
+    <Compile Include="ViewModel\LoggerViewModel.cs" />
     <Compile Include="ViewModel\ObservableObject.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="View\LoggerView.xaml.cs">
+      <DependentUpon>LoggerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -80,7 +85,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\Logger.cs" />
-    <Compile Include="Model\LoggerManager.cs" />
     <Compile Include="UserControls\IPTextBox.xaml.cs">
       <DependentUpon>IPTextBox.xaml</DependentUpon>
     </Compile>
@@ -88,6 +92,10 @@
       <DependentUpon>IPPortTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MBConnectViewModel.cs" />
+    <Page Include="View\LoggerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="ModbusTCP.View.LoggerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModbusTCP.View"
+             xmlns:viewmodel="clr-namespace:ModbusTCP.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="560">
+    <UserControl.DataContext>
+        <viewmodel:LoggerViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <DockPanel Grid.Row="4" Margin="10,10,10,10">
+            <DataGrid AutoGenerateColumns="False" Style="{StaticResource DataGridBackground}" x:Name="Logger" ItemsSource="{Binding LoggerItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" Margin="0,0,0,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Time" IsReadOnly="True" Binding="{Binding Time}"  Width="150"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Log" IsReadOnly="True" Binding="{Binding Log}" Width="*"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</UserControl>

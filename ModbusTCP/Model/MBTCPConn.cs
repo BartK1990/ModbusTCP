@@ -25,7 +25,12 @@ namespace ModbusTCP.Model
         public MBTCPConn()
         {
             IPSlavePort = -1;
-            this.logger = new WindowLogger();
+        }
+
+        private void Log(string message)
+        {
+            if (logger != null)
+                logger.Log(message);
         }
 
         public bool SetSlaveIPAddr(string ipAddr) // true if success and false if fault
@@ -33,7 +38,7 @@ namespace ModbusTCP.Model
             if(IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
                 IPSlaveAddr = ip;
-                logger.Log("Ip Address Set");
+                Log("Ip Address Set");
                 return true;
             }
             else

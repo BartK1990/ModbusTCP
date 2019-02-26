@@ -12,27 +12,16 @@ namespace ModbusTCP.ViewModel
 
     using ModbusTCP;
 
-    public struct LoggerListBoxItem
-    {
-        public string Log { get; set; }
-        public string Time { get; set; }
-        public LoggerListBoxItem(string log)
-        {
-            Log = log;
-            Time = DateTime.Now.ToString();
-        }
-    }
+
 
     public class MBConnectViewModel : ObservableObject
     {
-        private WindowLogger logger;
         private MBTCPConn _mbtcpconn;
 
         public MBConnectViewModel()
         {
-            logger = App.WinLogger;
-            logger.LoggerUpdated += LoggerUpdatedEventHandler;
-            _mbtcpconn = new MBTCPConn(logger);
+            App.WinLogger.LoggerUpdated += LoggerUpdatedEventHandler;
+            _mbtcpconn = new MBTCPConn(App.WinLogger);
         }
   
         public ObservableCollection<LoggerListBoxItem> LoggerItems { get; set; } = new ObservableCollection<LoggerListBoxItem>();
@@ -90,12 +79,12 @@ namespace ModbusTCP.ViewModel
 
         private void LoggerUpdatedEventHandler(object sender, LoggerEventArgs e)
         {
-            LoggerItemAdd(e.Log);
+            LoggerItemAdd(e.Log, e.Time.ToString("yyyy-MM-dd h:mm:ss"));
         }
 
-        private void LoggerItemAdd(string log)
+        private void LoggerItemAdd(string log, string time)
         {
-            LoggerItems.Add(new LoggerListBoxItem(log));
+            LoggerItems.Add(new LoggerListBoxItem(log, time));
         }
     }
 }
