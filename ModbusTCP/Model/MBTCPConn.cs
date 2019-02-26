@@ -14,11 +14,18 @@ namespace ModbusTCP.Model
         private TcpClient client;
         public IPAddress IPSlaveAddr { get; private set; }
         public int IPSlavePort { get; private set; }
-        private WindowLogger logger = new WindowLogger();
+        private ILog logger;
+
+        public MBTCPConn(ILog logger)
+        {
+            IPSlavePort = -1;
+            this.logger = logger;
+        }
 
         public MBTCPConn()
         {
             IPSlavePort = -1;
+            this.logger = new WindowLogger();
         }
 
         public bool SetSlaveIPAddr(string ipAddr) // true if success and false if fault
