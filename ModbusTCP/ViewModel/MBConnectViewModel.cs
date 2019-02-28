@@ -9,19 +9,20 @@ namespace ModbusTCP.ViewModel
     using Model;
     using System.Collections.ObjectModel;
     using System.Windows.Input;
-
+    using Microsoft.Win32;
     using ModbusTCP;
-
 
 
     public class MBConnectViewModel : ObservableObject
     {
         private MBTCPConn _mbtcpconn;
+        private Serializer<MBTCPConn> serialize_mbTCPConn;
 
         public MBConnectViewModel()
         {
             App.WinLogger.LoggerUpdated += LoggerUpdatedEventHandler;
             _mbtcpconn = new MBTCPConn(App.WinLogger);
+            serialize_mbTCPConn = new Serializer<MBTCPConn>();
         }
   
         public ObservableCollection<LoggerListBoxItem> LoggerItems { get; set; } = new ObservableCollection<LoggerListBoxItem>();
@@ -62,6 +63,45 @@ namespace ModbusTCP.ViewModel
                    x =>
                    {
                        Connect();
+                   }, x => _mbtcpconn.ipSet));
+            }
+        }
+
+        private ICommand _disconnectCommand;
+        public ICommand DisconnectCommand
+        {
+            get
+            {
+                return _disconnectCommand ?? (_disconnectCommand = new RelayCommand(
+                   x =>
+                   {
+                       Disconnect();
+                   }, x => true));
+            }
+        }
+
+        private ICommand _saveCommand;
+        public ICommand SaveCommand
+        {
+            get
+            {
+                return _saveCommand ?? (_saveCommand = new RelayCommand(
+                   x =>
+                   {
+                       SaveMBTCPConn();
+                   }, x => true));
+            }
+        }
+
+        private ICommand _openCommand;
+        public ICommand OpenCommand
+        {
+            get
+            {
+                return _openCommand ?? (_openCommand = new RelayCommand(
+                   x =>
+                   {
+                       OpenMBTCPConn();
                    }, x => true));
             }
         }
@@ -69,7 +109,7 @@ namespace ModbusTCP.ViewModel
         public void SetSlaveIPAddrAndPort()
         {
             _mbtcpconn.SetSlaveIPAddr(IPAddressText);
-            if (!int.TryParse(IPPortText, out int portInt))
+            if (int.TryParse(IPPortText, out int portInt))
             {
                 _mbtcpconn.SetSlaveIPPort(portInt);
             }
@@ -83,6 +123,24 @@ namespace ModbusTCP.ViewModel
         public void Disconnect()
         {
             _mbtcpconn.Disconnect();
+        }
+
+        public void SaveMBTCPConn()
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                serialize_mbTCPConn.Serialize(_mbtcpconn, dialog.FileName);
+            }
+        }
+
+        public void OpenMBTCPConn()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                serialize_mbTCPConn.Serialize(_mbtcpconn, dialog.FileName);
+            }
         }
 
         private void LoggerUpdatedEventHandler(object sender, LoggerEventArgs e)

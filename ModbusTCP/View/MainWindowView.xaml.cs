@@ -25,9 +25,13 @@ namespace ModbusTCP.View
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new ViewModel.MBConnectViewModel();
+
             mBConnectView = new MBConnectView();
             loggerView = new LoggerView();
 
+            mBConnectView.DataContext = this.DataContext;
+            loggerView.DataContext = new ViewModel.LoggerViewModel();
         }
 
         private void MenuConnect_button_Click(object sender, RoutedEventArgs e)

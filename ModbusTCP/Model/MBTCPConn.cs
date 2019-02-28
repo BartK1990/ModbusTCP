@@ -8,14 +8,19 @@ namespace ModbusTCP.Model
 {
     using System.Net;
     using System.Net.Sockets;
+    using System.Runtime.Serialization;
 
+    [DataContract]
     public class MBTCPConn
     {
         private TcpClient client;
+        [DataMember]
         public IPAddress IPSlaveAddr { get; private set; }
+        [DataMember]
         public int IPSlavePort { get; private set; }
         private bool ipAddrSet = false;
         private bool ipPortSet = false;
+        public bool ipSet { get { return ipAddrSet && ipPortSet; } }
         private ILog logger;
 
         public MBTCPConn(ILog logger)
@@ -41,6 +46,7 @@ namespace ModbusTCP.Model
             {
                 IPSlaveAddr = ip;
                 Log("Ip Address Set");
+                ipAddrSet = true;
                 return 0;
             }
             else
@@ -56,6 +62,7 @@ namespace ModbusTCP.Model
             {
                 IPSlavePort = port;
                 Log("Ip Port set");
+                ipPortSet = true;
                 return 0;
             }
             else
@@ -92,14 +99,22 @@ namespace ModbusTCP.Model
         {
             try
             {
-                if (client.Connected)
+                if (client != null)
                 {
-                    client.Close();
-                    Log("Disconnected succesfully");
-                    return 0; 
+                    if (client.Connected)
+                    {
+                        client.Close();
+                        Log("Disconnected succesfully");
+                        return 0;
+                    }
+                    Log("Disconnecting fault. There was no connection");
+                    return 1;
                 }
-                Log("Disconnecting fault. There was no connection");
-                return 1;
+                else
+                {
+                    Log("Connection client not created");
+                    return 2;
+                }
             }
             catch
             {
