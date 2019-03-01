@@ -8,15 +8,11 @@ namespace ModbusTCP.Model
 {
     using System.Net;
     using System.Net.Sockets;
-    using System.Runtime.Serialization;
 
-    [DataContract]
     public class MBTCPConn
     {
         private TcpClient client;
-        [DataMember]
         public IPAddress IPSlaveAddr { get; private set; }
-        [DataMember]
         public int IPSlavePort { get; private set; }
         private bool ipAddrSet = false;
         private bool ipPortSet = false;
@@ -40,9 +36,9 @@ namespace ModbusTCP.Model
                 logger.Log(message);
         }
 
-        public int SetSlaveIPAddr(string ipAddr) 
+        public int SetSlaveIPAddr(string ipAddr)
         {
-            if(IPAddress.TryParse(ipAddr, out IPAddress ip))
+            if (IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
                 IPSlaveAddr = ip;
                 Log("Ip Address Set");
@@ -76,7 +72,7 @@ namespace ModbusTCP.Model
         {
             try
             {
-                if( (IPSlaveAddr != null) && (IPSlavePort > -1))
+                if ((IPSlaveAddr != null) && (IPSlavePort > -1))
                 {
                     client = new TcpClient();
                     await client.ConnectAsync(IPSlaveAddr, IPSlavePort);
@@ -124,7 +120,7 @@ namespace ModbusTCP.Model
 
         public void SendData()
         {
-
+            throw new NotImplementedException();
         }
     }
 }

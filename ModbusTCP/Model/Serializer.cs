@@ -8,22 +8,41 @@ namespace ModbusTCP.Model
 {
     using System.Runtime.Serialization;
     using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
 
     public class Serializer<T>
     {
-        public void Serialize(T object_to_serialize, string filename)
+        public void DataContract_Serialize(T object_to_serialize, string filename)
         {
             var ds = new DataContractSerializer(typeof(T));
             using (Stream s = File.Create(filename))
             ds.WriteObject(s, object_to_serialize);
         }
 
-        public void Deserialize(out T deserialize_dest, string filename)
+        public void DataContract_Deserialize(out T deserialize_dest, string filename)
         {
             var ds = new DataContractSerializer(typeof(T));
             using (Stream s = File.OpenRead(filename))
             {
                 deserialize_dest = (T)ds.ReadObject(s);
+            }
+        }
+
+        public void Binary_Serialize(T object_to_serialize, string filename)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            using (Stream s = File.Create(filename))
+            {
+                formatter.Serialize(s, object_to_serialize);
+            }
+        }
+
+        public void Binary_Deserialize(out T deserialize_dest, string filename)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            using (Stream s = File.OpenRead(filename))
+            {
+                deserialize_dest = (T)formatter.Deserialize(s);
             }
         }
     }

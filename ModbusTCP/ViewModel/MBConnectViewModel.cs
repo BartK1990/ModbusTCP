@@ -11,20 +11,32 @@ namespace ModbusTCP.ViewModel
     using System.Windows.Input;
     using Microsoft.Win32;
     using ModbusTCP;
+    using System.Runtime.Serialization;
 
 
-    public class MBConnectViewModel : ObservableObject
+    public class MBConnectViewModel : ObservableObject, ISerializable
     {
-        private MBTCPConn _mbtcpconn;
-        private Serializer<MBTCPConn> serialize_mbTCPConn;
-
         public MBConnectViewModel()
         {
             App.WinLogger.LoggerUpdated += LoggerUpdatedEventHandler;
             _mbtcpconn = new MBTCPConn(App.WinLogger);
-            serialize_mbTCPConn = new Serializer<MBTCPConn>();
         }
-  
+
+        //Deserialization constructor.
+        public MBConnectViewModel(SerializationInfo info, StreamingContext context)
+        {
+            ipAddressText = (string)info.GetValue("ipAddressText", typeof(string));
+            ipPortText = (string)info.GetValue("ipPortText", typeof(string));
+        }
+
+        //Serialization function.
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("ipAddressText", ipAddressText);
+            info.AddValue("ipPortText", ipPortText);
+        }
+
+        private MBTCPConn _mbtcpconn;
         public ObservableCollection<LoggerListBoxItem> LoggerItems { get; set; } = new ObservableCollection<LoggerListBoxItem>();
 
         private string ipAddressText;
@@ -127,20 +139,28 @@ namespace ModbusTCP.ViewModel
 
         public void SaveMBTCPConn()
         {
+            throw new NotImplementedException();
+            /*
+            Serializer<MBConnectViewModel> serializer = new Serializer<MBConnectViewModel>();
             SaveFileDialog dialog = new SaveFileDialog();
             if (dialog.ShowDialog() == true)
             {
-                serialize_mbTCPConn.Serialize(_mbtcpconn, dialog.FileName);
+                serializer.Binary_Serialize(this, dialog.FileName);
             }
+            */
         }
 
         public void OpenMBTCPConn()
         {
+            throw new NotImplementedException();
+            /*
+            Serializer<MBConnectViewModel> serializer = new Serializer<MBConnectViewModel>();
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == true)
             {
-                serialize_mbTCPConn.Serialize(_mbtcpconn, dialog.FileName);
+                serializer.Binary_Deserialize(out this, dialog.FileName);
             }
+            */
         }
 
         private void LoggerUpdatedEventHandler(object sender, LoggerEventArgs e)
