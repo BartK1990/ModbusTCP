@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" Margin="0 0 0 0">
-            <Button Margin="20 0 0 0" Content="Send" x:Name="Send_Button" Command="{Binding SendCommand}" Height="30" HorizontalAlignment="Left" Width="100" FontSize="16" FontWeight="Bold"/>
+            <Button Margin="20 0 0 0" Content="SEND" x:Name="Send_Button" Command="{Binding SendCommand}" Height="30" HorizontalAlignment="Left" Width="100" FontSize="16"/>
         </DockPanel>
         <DockPanel Grid.Row="1" Margin="0 0 0 0">
             <ListBox Margin="0 0 0 0" VerticalAlignment="Top"/>
