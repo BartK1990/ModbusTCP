@@ -153,10 +153,10 @@ namespace ModbusTCP.Model
             }
         }
 
-        public void SendData(string message)
+        public void SendData(Byte[] byteArray)
         {
             // Translate the passed message into ASCII and store it as a Byte array.
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+            Byte[] data = byteArray;
 
             // Get a client stream for reading and writing.
             //  Stream stream = client.GetStream();
@@ -165,21 +165,23 @@ namespace ModbusTCP.Model
 
             // Send the message to the connected TcpServer. 
             stream.Write(data, 0, data.Length);
-
-            Console.WriteLine("Sent: {0}", message);
+            string hex = BitConverter.ToString(data);
+            Console.Write("Sent: {0}", hex);
 
             // Receive the TcpServer.response.
 
             // Buffer to store the response bytes.
             data = new Byte[256];
 
-            // String to store the response ASCII representation.
-            String responseData = String.Empty;
-
             // Read the first batch of the TcpServer response bytes.
+            stream.ReadTimeout = 5000;
             Int32 bytes = stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-            Console.WriteLine("Received: {0}", responseData);
+            Byte[] dataReceived = new Byte[bytes];
+            Array.Copy(data, dataReceived, bytes);
+
+            hex = BitConverter.ToString(dataReceived);
+
+            Console.WriteLine("Received: {0}", hex);
 
             // Close everything.
             stream.Close();

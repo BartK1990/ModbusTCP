@@ -30,7 +30,7 @@ namespace ModbusTCP.ViewModel
                 return _sendCommand ?? (_sendCommand = new RelayCommand(
                    x =>
                    {
-                       _mbtcpconn.SendData("trololo");
+                       _mbtcpconn.SendData(new Byte[] { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x01, 0x03, 0x02, 0x00, 0x00 });
                    }, x => true));
             }
         }
