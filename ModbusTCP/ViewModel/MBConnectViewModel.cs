@@ -11,29 +11,15 @@ namespace ModbusTCP.ViewModel
     using System.Windows.Input;
     using Microsoft.Win32;
     using ModbusTCP;
-    using System.Runtime.Serialization;
+    using System.ComponentModel;
 
-
-    public class MBConnectViewModel : ObservableObject, ISerializable
+    public class MBConnectViewModel : ObservableObject
     {
         public MBConnectViewModel()
         {
             App.WinLogger.LoggerUpdated += LoggerUpdatedEventHandler;
             _mbtcpconn = new MBTCPConn(App.WinLogger);
-        }
-
-        //Deserialization constructor.
-        public MBConnectViewModel(SerializationInfo info, StreamingContext context)
-        {
-            ipAddressText = (string)info.GetValue("ipAddressText", typeof(string));
-            ipPortText = (string)info.GetValue("ipPortText", typeof(string));
-        }
-
-        //Serialization function.
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("ipAddressText", ipAddressText);
-            info.AddValue("ipPortText", ipPortText);
+            _mbtcpconn.PropertyChanged += MBTCPConnEventHandler;
         }
 
         private MBTCPConn _mbtcpconn;
@@ -120,7 +106,7 @@ namespace ModbusTCP.ViewModel
 
         public void SetSlaveIPAddrAndPort()
         {
-            _mbtcpconn.SetSlaveIPAddr(IPAddressText);
+            _mbtcpconn.SetSlaveIPv4Addr(IPAddressText);
             if (int.TryParse(IPPortText, out int portInt))
             {
                 _mbtcpconn.SetSlaveIPPort(portInt);
@@ -139,33 +125,44 @@ namespace ModbusTCP.ViewModel
 
         public void SaveMBTCPConn()
         {
-            throw new NotImplementedException();
-            /*
-            Serializer<MBConnectViewModel> serializer = new Serializer<MBConnectViewModel>();
+            Serializer serializer = new Serializer();
             SaveFileDialog dialog = new SaveFileDialog();
             if (dialog.ShowDialog() == true)
             {
-                serializer.Binary_Serialize(this, dialog.FileName);
+                serializer.Binary_Serialize<MBTCPConn>(_mbtcpconn, dialog.FileName);
             }
-            */
+
         }
 
         public void OpenMBTCPConn()
         {
-            throw new NotImplementedException();
-            /*
-            Serializer<MBConnectViewModel> serializer = new Serializer<MBConnectViewModel>();
+            Serializer serializer = new Serializer();
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == true)
             {
-                serializer.Binary_Deserialize(out this, dialog.FileName);
+                serializer.Binary_Deserialize<MBTCPConn>(out MBTCPConn mbtcpconn, dialog.FileName);
+                _mbtcpconn.CopyParametersAndInit(mbtcpconn);
             }
-            */
         }
 
         private void LoggerUpdatedEventHandler(object sender, LoggerEventArgs e)
         {
             LoggerItemAdd(e.Log, e.Time.ToString("yyyy-MM-dd h:mm:ss"));
+        }
+
+        private void MBTCPConnEventHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(e.PropertyName))
+            {
+                if(e.PropertyName == "IPSlaveAddrText")
+                {
+                    IPAddressText = _mbtcpconn.IPSlaveAddrText;
+                }
+                if (e.PropertyName == "IPSlavePort")
+                {
+                    IPPortText = _mbtcpconn.IPSlavePort.ToString();
+                }
+            }
         }
 
         private void LoggerItemAdd(string log, string time)

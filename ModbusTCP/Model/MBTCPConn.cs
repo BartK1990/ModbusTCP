@@ -8,26 +8,60 @@ namespace ModbusTCP.Model
 {
     using System.Net;
     using System.Net.Sockets;
+    using System.Runtime.Serialization;
 
-    public class MBTCPConn
+    [Serializable]
+    public class MBTCPConn : ObservableObject, ISerializable
     {
         private TcpClient client;
-        public IPAddress IPSlaveAddr { get; private set; }
-        public int IPSlavePort { get; private set; }
+        private IPAddress IPSlaveAddr;
+        private string ipSlaveAddrText;
+        public string IPSlaveAddrText
+        {
+            get { return IPSlaveAddr.ToString(); }
+            private set
+                { this.SetAndNotify(ref this.ipSlaveAddrText, value, () => this.IPSlaveAddrText); }
+        }
+        private int ipSlavePort;
+        public int IPSlavePort
+        {
+            get { return ipSlavePort; }
+            private set
+                { this.SetAndNotify(ref this.ipSlavePort, value, () => this.IPSlavePort); }
+        }
         private bool ipAddrSet = false;
         private bool ipPortSet = false;
         public bool ipSet { get { return ipAddrSet && ipPortSet; } }
         private ILog logger;
 
+        public MBTCPConn()
+        {
+            IPSlavePort = -1;
+        }
         public MBTCPConn(ILog logger)
         {
             IPSlavePort = -1;
             this.logger = logger;
         }
 
-        public MBTCPConn()
+        public void CopyParametersAndInit(MBTCPConn mbTCPConn)
         {
-            IPSlavePort = -1;
+            SetSlaveIPv4Addr(mbTCPConn.IPSlaveAddrText);
+            SetSlaveIPPort(mbTCPConn.IPSlavePort);
+        }
+
+        //Deserialization constructor.
+        public MBTCPConn(SerializationInfo info, StreamingContext context)
+        {
+            SetSlaveIPv4Addr((string)info.GetValue("ipAddressText", typeof(string)));
+            SetSlaveIPPort((int)info.GetValue("ipPort", typeof(int)));
+        }
+
+        //Serialization function.
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("ipAddressText", IPSlaveAddrText);
+            info.AddValue("ipPort", IPSlavePort);
         }
 
         private void Log(string message)
@@ -36,11 +70,12 @@ namespace ModbusTCP.Model
                 logger.Log(message);
         }
 
-        public int SetSlaveIPAddr(string ipAddr)
+        public int SetSlaveIPv4Addr(string ipAddr)
         {
             if (IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
                 IPSlaveAddr = ip;
+                IPSlaveAddrText = IPSlaveAddr.ToString();
                 Log("Ip Address Set");
                 ipAddrSet = true;
                 return 0;
