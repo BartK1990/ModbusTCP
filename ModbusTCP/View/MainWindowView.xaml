@@ -28,6 +28,7 @@
         </DockPanel>
         <StackPanel Grid.Row="1" Grid.Column="0">
             <Button x:Name="MenuConnect_button" Margin="0 20 0 0" Height="30" Content="Connect" Click="MenuConnect_button_Click"/>
+            <Button x:Name="MenuCommunication_button" Margin="0 20 0 0" Height="30" Content="Communication" Click="MenuCommunication_button_Click"/>
             <Button x:Name="MenuLogger_button" Margin="0 20 0 0" Height="30" Content="Logger" Click="MenuLogger_button_Click"/>
         </StackPanel>
         <DockPanel Grid.Row="1" Grid.Column="1">

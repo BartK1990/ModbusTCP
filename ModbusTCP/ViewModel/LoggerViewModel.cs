@@ -12,9 +12,9 @@ namespace ModbusTCP.ViewModel
 
     public class LoggerViewModel
     {
-        public LoggerViewModel()
+        public LoggerViewModel(WindowLogger windowLogger)
         {
-            App.WinLogger.LoggerUpdated += LoggerUpdatedEventHandler;
+            windowLogger.LoggerUpdated += LoggerUpdatedEventHandler;
         }
 
         public ObservableCollection<LoggerListBoxItem> LoggerItems { get; set; } = new ObservableCollection<LoggerListBoxItem>();

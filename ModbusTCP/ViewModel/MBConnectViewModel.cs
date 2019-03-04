@@ -15,15 +15,15 @@ namespace ModbusTCP.ViewModel
 
     public class MBConnectViewModel : ObservableObject
     {
-        public MBConnectViewModel()
-        {
-            App.WinLogger.LoggerUpdated += LoggerUpdatedEventHandler;
-            _mbtcpconn = new MBTCPConn(App.WinLogger);
-            _mbtcpconn.PropertyChanged += MBTCPConnEventHandler;
-        }
-
         private MBTCPConn _mbtcpconn;
         public ObservableCollection<LoggerListBoxItem> LoggerItems { get; set; } = new ObservableCollection<LoggerListBoxItem>();
+
+        public MBConnectViewModel(MBTCPConn mbTCPConn, WindowLogger windowLogger)
+        {
+            this._mbtcpconn = mbTCPConn;
+            windowLogger.LoggerUpdated += LoggerUpdatedEventHandler;
+            this._mbtcpconn.PropertyChanged += MBTCPConnEventHandler;
+        }
 
         private string ipAddressText;
         public string IPAddressText

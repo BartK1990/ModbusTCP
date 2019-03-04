@@ -8,8 +8,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="560">
     <Grid>
-        <DockPanel Grid.Row="4" Margin="10,10,10,10">
-            <DataGrid AutoGenerateColumns="False" Style="{StaticResource DataGridBackground}" x:Name="Logger" ItemsSource="{Binding LoggerItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="True" Margin="0,0,0,0">
+        <DockPanel Margin="10,10,10,10">
+            <DataGrid AutoGenerateColumns="False" Style="{StaticResource DataGridBackground}" x:Name="Logger" ItemsSource="{Binding LoggerItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False" Margin="0,0,0,0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Time" IsReadOnly="True" Binding="{Binding Time}"  Width="150"></DataGridTextColumn>
                     <DataGridTextColumn Header="Log" IsReadOnly="True" Binding="{Binding Log}" Width="*"></DataGridTextColumn>

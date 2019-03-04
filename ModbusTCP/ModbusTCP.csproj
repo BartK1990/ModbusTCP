@@ -62,10 +62,14 @@
     </ApplicationDefinition>
     <Compile Include="Model\ObservableObject.cs" />
     <Compile Include="Model\Serializer.cs" />
-    <Compile Include="ViewModel\LoggerListBoxItem.cs" />
+    <Compile Include="ViewModel\CommunicationViewModel.cs" />
+    <Compile Include="ViewModel\ListBoxItems.cs" />
     <Compile Include="ViewModel\LoggerViewModel.cs" />
     <Compile Include="ViewModel\ObservableObject.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
+    <Compile Include="View\CommunicationView.xaml.cs">
+      <DependentUpon>CommunicationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\LoggerView.xaml.cs">
       <DependentUpon>LoggerView.xaml</DependentUpon>
     </Compile>
@@ -95,6 +99,10 @@
       <DependentUpon>IPPortTextBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MBConnectViewModel.cs" />
+    <Page Include="View\CommunicationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\LoggerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -8,14 +8,12 @@ using System.Windows;
 
 namespace ModbusTCP
 {
-
-    using Model;
     
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
-        public static WindowLogger WinLogger = new WindowLogger();
+
     }
 }

@@ -19,29 +19,42 @@ namespace ModbusTCP.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MBConnectView mBConnectView;
+        private MBConnectView mbConnectView;
         private LoggerView loggerView;
+        private CommunicationView communicationView;
+
+        private Model.WindowLogger windowLogger;
+        private Model.MBTCPConn mbTCPConn;
 
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new ViewModel.MBConnectViewModel();
+            windowLogger = new Model.WindowLogger();
+            mbTCPConn = new Model.MBTCPConn(windowLogger);
 
-            mBConnectView = new MBConnectView();
+            mbConnectView = new MBConnectView();
             loggerView = new LoggerView();
+            communicationView = new CommunicationView();
 
-            mBConnectView.DataContext = this.DataContext;
-            loggerView.DataContext = new ViewModel.LoggerViewModel();
+            this.DataContext = new ViewModel.MBConnectViewModel(mbTCPConn, windowLogger);
+            mbConnectView.DataContext = this.DataContext;
+            loggerView.DataContext = new ViewModel.LoggerViewModel(windowLogger);
+            communicationView.DataContext = new ViewModel.CommunicationViewModel(mbTCPConn);
         }
 
         private void MenuConnect_button_Click(object sender, RoutedEventArgs e)
         {
-            WindowContent.Content = mBConnectView;
+            WindowContent.Content = mbConnectView;
         }
 
         private void MenuLogger_button_Click(object sender, RoutedEventArgs e)
         {
             WindowContent.Content = loggerView;
+        }
+
+        private void MenuCommunication_button_Click(object sender, RoutedEventArgs e)
+        {
+            WindowContent.Content = communicationView;
         }
     }
 }
