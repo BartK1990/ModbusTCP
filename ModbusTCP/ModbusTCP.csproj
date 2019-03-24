@@ -60,6 +60,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\MBTCPMessages.cs" />
     <Compile Include="Model\ObservableObject.cs" />
     <Compile Include="Model\Serializer.cs" />
     <Compile Include="ViewModel\CommunicationViewModel.cs" />
