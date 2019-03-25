@@ -21,9 +21,4 @@ namespace ModbusTCP.ViewModel
             Time = time;
         }
     }
-
-    public struct CommunicationListBoxItem
-    {
-        public string Data { get; set; }
-    }
 }

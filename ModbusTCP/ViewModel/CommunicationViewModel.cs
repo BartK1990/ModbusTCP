@@ -15,22 +15,22 @@ namespace ModbusTCP.ViewModel
     public class CommunicationViewModel : ObservableObject
     {
         private MBTCPConn _mbtcpconn;
-        public ObservableCollection<CommunicationListBoxItem> CommunicationItems { get; set; } = new ObservableCollection<CommunicationListBoxItem>();
+        public ObservableCollection<string> CommunicationItems { get; set; } = new ObservableCollection<string>();
 
         public CommunicationViewModel(MBTCPConn mbTCPConn)
         {
             this._mbtcpconn = mbTCPConn;
         }
 
-        private ICommand _sendCommand;
-        public ICommand SendCommand
+        private ICommand _startCommand;
+        public ICommand StartCommand
         {
             get
             {
-                return _sendCommand ?? (_sendCommand = new RelayCommand(
+                return _startCommand ?? (_startCommand = new RelayCommand(
                    x =>
                    {
-                       _mbtcpconn.SendData(new Byte[] { 0x00, 0x01, 0x00, 0x00, 0x00, 0x05, 0x01, 0x03, 0x02, 0x00, 0x00 });
+                       _mbtcpconn.StartCommunnication(CommunicationItems);
                    }, x => true));
             }
         }

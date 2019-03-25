@@ -8,19 +8,45 @@ namespace ModbusTCP.Model
 {
 
 
-    public static class MBTCPMessages
+    public class MBTCPMessages
     {
+        private uint transactionId = 0;
+        private byte[] transactionIdentifier = new byte[2];
+        private byte[] protocolId = new byte[2];
+        private byte[] crc = new byte[2];
+        private byte[] length = new byte[2];
+        private byte unitIdentifier = 0x01;
+        private byte functionCode;
+        private byte[] startingAddress = new byte[2];
+        private byte[] quantity = new byte[2];
 
-
-
-
-        public static Byte[] ReadHoldingRegisterSend(int startAddress, int quantity)
+        public Byte[] ReadHoldingRegisterSend(int startingAddress, int quantity)
         {
-            Byte[] message = new Byte[1];
+            this.transactionIdentifier = BitConverter.GetBytes((uint)transactionId);
+            this.protocolId = BitConverter.GetBytes((int)0x0000);
+            this.length = BitConverter.GetBytes((int)0x0006);
+            this.functionCode = 0x03;
+            this.startingAddress = BitConverter.GetBytes(startingAddress);
+            this.quantity = BitConverter.GetBytes(quantity);
+            Byte[] message = new byte[]{   this.transactionIdentifier[1],
+                            this.transactionIdentifier[0],
+                            this.protocolId[1],
+                            this.protocolId[0],
+                            this.length[1],
+                            this.length[0],
+                            this.unitIdentifier,
+                            this.functionCode,
+                            this.startingAddress[1],
+                            this.startingAddress[0],
+                            this.quantity[1],
+                            this.quantity[0],
+                            this.crc[0],
+                            this.crc[1]
+            };
 
             return message;
         }
-        public static List<int> ReadHoldingRegisterReceive(Byte[] response)
+        public List<int> ReadHoldingRegisterReceive(Byte[] response)
         {
             List<int> registersValues = new List<int>();
 

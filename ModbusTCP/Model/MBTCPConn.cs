@@ -10,15 +10,27 @@ namespace ModbusTCP.Model
     using System.Net.Sockets;
     using System.Runtime.Serialization;
 
+    internal struct ModbusMsg
+    {
+        public int Address { get; set; }
+        public int Quantity { get; set; }
+        public ModbusMsg(int address, int quantity)
+        {
+            this.Address = address;
+            this.Quantity = quantity;
+        }
+    }
+
     [Serializable]
     public class MBTCPConn : ObservableObject, ISerializable
     {
         private TcpClient client;
-        private IPAddress IPSlaveAddr;
+        private IPAddress iPSlaveAddr;
+        private List<ModbusMsg> readHoldingRegistersList = new List<ModbusMsg>();
         private string ipSlaveAddrText;
         public string IPSlaveAddrText
         {
-            get { return IPSlaveAddr.ToString(); }
+            get { return iPSlaveAddr.ToString(); }
             private set
                 { this.SetAndNotify(ref this.ipSlaveAddrText, value, () => this.IPSlaveAddrText); }
         }
@@ -74,8 +86,8 @@ namespace ModbusTCP.Model
         {
             if (IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
-                IPSlaveAddr = ip;
-                IPSlaveAddrText = IPSlaveAddr.ToString();
+                iPSlaveAddr = ip;
+                IPSlaveAddrText = iPSlaveAddr.ToString();
                 Log("Ip Address Set");
                 ipAddrSet = true;
                 return 0;
@@ -107,16 +119,16 @@ namespace ModbusTCP.Model
         {
             try
             {
-                if ((IPSlaveAddr != null) && (IPSlavePort > -1))
+                if ((iPSlaveAddr != null) && (IPSlavePort > -1))
                 {
                     client = new TcpClient();
-                    await client.ConnectAsync(IPSlaveAddr, IPSlavePort);
-                    Log("Connected to IP:" + IPSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                    await client.ConnectAsync(iPSlaveAddr, IPSlavePort);
+                    Log("Connected to IP:" + iPSlaveAddr.ToString() + " at port: " + IPSlavePort);
                     return 0;
                 }
                 else
                 {
-                    Log("Connection error at IP:" + IPSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                    Log("Connection error at IP:" + iPSlaveAddr.ToString() + " at port: " + IPSlavePort);
                     return 1;
                 }
             }
@@ -151,6 +163,18 @@ namespace ModbusTCP.Model
             {
                 throw;
             }
+        }
+
+        async public void StartCommunnication(IList<string> monitor)
+        {
+            ModbusMsg mm = new ModbusMsg(1, 1);
+            MBTCPMessages mbtcpm = new MBTCPMessages();
+            var sb = new StringBuilder();
+
+            Byte[] byteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
+
+            string hex = BitConverter.ToString(byteArray);
+            monitor.Add(hex);
         }
 
         public void SendData(Byte[] byteArray)
