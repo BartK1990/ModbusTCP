@@ -24,15 +24,15 @@ namespace ModbusTCP.Model
     [Serializable]
     public class MBTCPConn : ObservableObject, ISerializable
     {
-        private TcpClient client;
-        private IPAddress iPSlaveAddr;
-        private List<ModbusMsg> readHoldingRegistersList = new List<ModbusMsg>();
-        private string ipSlaveAddrText;
-        public string IPSlaveAddrText
+        private TcpClient _client;
+        private IPAddress _iPSlaveAddr;
+        private List<ModbusMsg> _readHoldingRegistersList = new List<ModbusMsg>();
+        private string _ipSlaveAddrText;
+        public string IpSlaveAddrText
         {
-            get { return iPSlaveAddr.ToString(); }
+            get { return _iPSlaveAddr.ToString(); }
             private set
-                { this.SetAndNotify(ref this.ipSlaveAddrText, value, () => this.IPSlaveAddrText); }
+                { this.SetAndNotify(ref this._ipSlaveAddrText, value, () => this.IpSlaveAddrText); }
         }
         private int ipSlavePort;
         public int IPSlavePort
@@ -41,10 +41,10 @@ namespace ModbusTCP.Model
             private set
                 { this.SetAndNotify(ref this.ipSlavePort, value, () => this.IPSlavePort); }
         }
-        private bool ipAddrSet = false;
-        private bool ipPortSet = false;
-        public bool ipSet { get { return ipAddrSet && ipPortSet; } }
-        private ILog logger;
+        private bool _ipAddrSet = false;
+        private bool _ipPortSet = false;
+        public bool _ipSet { get { return _ipAddrSet && _ipPortSet; } }
+        readonly ILog _logger;
 
         public MBTCPConn()
         {
@@ -53,12 +53,12 @@ namespace ModbusTCP.Model
         public MBTCPConn(ILog logger)
         {
             IPSlavePort = -1;
-            this.logger = logger;
+            this._logger = logger;
         }
 
         public void CopyParametersAndInit(MBTCPConn mbTCPConn)
         {
-            SetSlaveIPv4Addr(mbTCPConn.IPSlaveAddrText);
+            SetSlaveIPv4Addr(mbTCPConn.IpSlaveAddrText);
             SetSlaveIPPort(mbTCPConn.IPSlavePort);
         }
 
@@ -72,24 +72,24 @@ namespace ModbusTCP.Model
         //Serialization function.
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("ipAddressText", IPSlaveAddrText);
+            info.AddValue("ipAddressText", IpSlaveAddrText);
             info.AddValue("ipPort", IPSlavePort);
         }
 
         private void Log(string message)
         {
-            if (logger != null)
-                logger.Log(message);
+            if (_logger != null)
+                _logger.Log(message);
         }
 
         public int SetSlaveIPv4Addr(string ipAddr)
         {
             if (IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
-                iPSlaveAddr = ip;
-                IPSlaveAddrText = iPSlaveAddr.ToString();
+                _iPSlaveAddr = ip;
+                IpSlaveAddrText = _iPSlaveAddr.ToString();
                 Log("Ip Address Set");
-                ipAddrSet = true;
+                _ipAddrSet = true;
                 return 0;
             }
             else
@@ -105,7 +105,7 @@ namespace ModbusTCP.Model
             {
                 IPSlavePort = port;
                 Log("Ip Port set");
-                ipPortSet = true;
+                _ipPortSet = true;
                 return 0;
             }
             else
@@ -119,16 +119,16 @@ namespace ModbusTCP.Model
         {
             try
             {
-                if ((iPSlaveAddr != null) && (IPSlavePort > -1))
+                if ((_iPSlaveAddr != null) && (IPSlavePort > -1))
                 {
-                    client = new TcpClient();
-                    await client.ConnectAsync(iPSlaveAddr, IPSlavePort);
-                    Log("Connected to IP:" + iPSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                    _client = new TcpClient();
+                    await _client.ConnectAsync(_iPSlaveAddr, IPSlavePort);
+                    Log("Connected to IP:" + _iPSlaveAddr.ToString() + " at port: " + IPSlavePort);
                     return 0;
                 }
                 else
                 {
-                    Log("Connection error at IP:" + iPSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                    Log("Connection error at IP:" + _iPSlaveAddr.ToString() + " at port: " + IPSlavePort);
                     return 1;
                 }
             }
@@ -142,12 +142,12 @@ namespace ModbusTCP.Model
         {
             try
             {
-                if (client != null)
+                if (_client != null)
                 {
-                    if (client.Connected)
+                    if (_client.Connected)
                     {
-                        client.Close();
-                        Log("Disconnected succesfully");
+                        _client.Close();
+                        Log("Disconnected successfully");
                         return 0;
                     }
                     Log("Disconnecting fault. There was no connection");
@@ -155,7 +155,7 @@ namespace ModbusTCP.Model
                 }
                 else
                 {
-                    Log("Connection client not created");
+                    Log("Connection _client not created");
                     return 2;
                 }
             }
@@ -182,10 +182,10 @@ namespace ModbusTCP.Model
             // Translate the passed message into ASCII and store it as a Byte array.
             Byte[] data = byteArray;
 
-            // Get a client stream for reading and writing.
-            //  Stream stream = client.GetStream();
+            // Get a _client stream for reading and writing.
+            //  Stream stream = _client.GetStream();
 
-            NetworkStream stream = client.GetStream();
+            NetworkStream stream = _client.GetStream();
 
             // Send the message to the connected TcpServer. 
             stream.Write(data, 0, data.Length);
@@ -210,5 +210,6 @@ namespace ModbusTCP.Model
             // Close everything.
             stream.Close();
         }
+
     }
 }
