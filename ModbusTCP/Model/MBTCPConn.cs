@@ -147,7 +147,7 @@ namespace ModbusTCP.Model
                     if (client.Connected)
                     {
                         client.Close();
-                        Log("Disconnected succesfully");
+                        Log("Disconnected successfully");
                         return 0;
                     }
                     Log("Disconnecting fault. There was no connection");
@@ -169,11 +169,12 @@ namespace ModbusTCP.Model
         {
             ModbusMsg mm = new ModbusMsg(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
-            var sb = new StringBuilder();
 
             Byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
+            Byte[] responseByteArray = await SendDataAsync(messageByteArray);
             string hex = BitConverter.ToString(messageByteArray);
             monitor.Add(hex);
+
 
 
         }
