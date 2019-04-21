@@ -171,13 +171,14 @@ namespace ModbusTCP.Model
             MBTCPMessages mbtcpm = new MBTCPMessages();
             var sb = new StringBuilder();
 
-            Byte[] byteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
-
-            string hex = BitConverter.ToString(byteArray);
+            Byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
+            string hex = BitConverter.ToString(messageByteArray);
             monitor.Add(hex);
+
+
         }
 
-        public void SendData(Byte[] byteArray)
+        public async Task<Byte[]> SendDataAsync(Byte[] byteArray)
         {
             // Translate the passed message into ASCII and store it as a Byte array.
             Byte[] data = byteArray;
@@ -188,9 +189,8 @@ namespace ModbusTCP.Model
             NetworkStream stream = client.GetStream();
 
             // Send the message to the connected TcpServer. 
-            stream.Write(data, 0, data.Length);
+            await stream.WriteAsync(data, 0, data.Length);
             string hex = BitConverter.ToString(data);
-            Console.Write("Sent: {0}", hex);
 
             // Receive the TcpServer.response.
 
@@ -198,17 +198,16 @@ namespace ModbusTCP.Model
             data = new Byte[256];
 
             // Read the first batch of the TcpServer response bytes.
-            stream.ReadTimeout = 5000;
-            Int32 bytes = stream.Read(data, 0, data.Length);
+            stream.ReadTimeout = 3000;
+            Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
             Byte[] dataReceived = new Byte[bytes];
             Array.Copy(data, dataReceived, bytes);
 
-            hex = BitConverter.ToString(dataReceived);
-
-            Console.WriteLine("Received: {0}", hex);
-
             // Close everything.
             stream.Close();
+
+            return dataReceived;
         }
+
     }
 }
