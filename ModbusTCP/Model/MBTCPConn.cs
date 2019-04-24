@@ -176,7 +176,7 @@ namespace ModbusTCP.Model
             }
         }
 
-        public async void StartCommunication(IList<string> monitor)
+        public async Task StartCommunication(IList<string> monitor)
         {
             ModbusMsg mm = new ModbusMsg(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
