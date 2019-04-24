@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ModbusTCP.Model
 {
@@ -24,42 +25,52 @@ namespace ModbusTCP.Model
     [Serializable]
     public class MBTCPConn : ObservableObject, ISerializable
     {
-        private TcpClient client;
-        private IPAddress iPSlaveAddr;
+        private TcpClient _client;
+        private IPAddress _ipSlaveAddr;
         private List<ModbusMsg> readHoldingRegistersList = new List<ModbusMsg>();
-        private string ipSlaveAddrText;
-        public string IPSlaveAddrText
+        private string _ipSlaveAddrText;
+        public string IpSlaveAddrText
         {
-            get { return iPSlaveAddr.ToString(); }
+            get { return _ipSlaveAddr.ToString(); }
             private set
-                { this.SetAndNotify(ref this.ipSlaveAddrText, value, () => this.IPSlaveAddrText); }
+                { this.SetAndNotify(ref this._ipSlaveAddrText, value, () => this.IpSlaveAddrText); }
         }
-        private int ipSlavePort;
-        public int IPSlavePort
+        private int _ipSlavePort;
+        public int IpSlavePort
         {
-            get { return ipSlavePort; }
+            get { return _ipSlavePort; }
             private set
-                { this.SetAndNotify(ref this.ipSlavePort, value, () => this.IPSlavePort); }
+                { this.SetAndNotify(ref this._ipSlavePort, value, () => this.IpSlavePort); }
         }
-        private bool ipAddrSet = false;
-        private bool ipPortSet = false;
-        public bool ipSet { get { return ipAddrSet && ipPortSet; } }
-        private ILog logger;
+        private bool _ipAddrSet = false;
+        private bool _ipPortSet = false;
+        public bool IpSet { get { return _ipAddrSet && _ipPortSet; } }
+        public bool Connected
+        {
+            get
+            {
+                if (this._client != null)
+                    return _client.Connected;
+                else
+                    return false;
+            }
+        }
+        private readonly ILog _logger;
 
         public MBTCPConn()
         {
-            IPSlavePort = -1;
+            IpSlavePort = -1;
         }
         public MBTCPConn(ILog logger)
         {
-            IPSlavePort = -1;
-            this.logger = logger;
+            IpSlavePort = -1;
+            this._logger = logger;
         }
 
         public void CopyParametersAndInit(MBTCPConn mbTCPConn)
         {
-            SetSlaveIPv4Addr(mbTCPConn.IPSlaveAddrText);
-            SetSlaveIPPort(mbTCPConn.IPSlavePort);
+            SetSlaveIPv4Addr(mbTCPConn.IpSlaveAddrText);
+            SetSlaveIPPort(mbTCPConn.IpSlavePort);
         }
 
         //Deserialization constructor.
@@ -72,24 +83,24 @@ namespace ModbusTCP.Model
         //Serialization function.
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("ipAddressText", IPSlaveAddrText);
-            info.AddValue("ipPort", IPSlavePort);
+            info.AddValue("ipAddressText", IpSlaveAddrText);
+            info.AddValue("ipPort", IpSlavePort);
         }
 
         private void Log(string message)
         {
-            if (logger != null)
-                logger.Log(message);
+            if (_logger != null)
+                _logger.Log(message);
         }
 
         public int SetSlaveIPv4Addr(string ipAddr)
         {
             if (IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
-                iPSlaveAddr = ip;
-                IPSlaveAddrText = iPSlaveAddr.ToString();
+                _ipSlaveAddr = ip;
+                IpSlaveAddrText = _ipSlaveAddr.ToString();
                 Log("Ip Address Set");
-                ipAddrSet = true;
+                _ipAddrSet = true;
                 return 0;
             }
             else
@@ -103,9 +114,9 @@ namespace ModbusTCP.Model
         {
             if ((port >= 0) && (port <= 65535))
             {
-                IPSlavePort = port;
+                IpSlavePort = port;
                 Log("Ip Port set");
-                ipPortSet = true;
+                _ipPortSet = true;
                 return 0;
             }
             else
@@ -119,16 +130,16 @@ namespace ModbusTCP.Model
         {
             try
             {
-                if ((iPSlaveAddr != null) && (IPSlavePort > -1))
+                if ((_ipSlaveAddr != null) && (IpSlavePort > -1))
                 {
-                    client = new TcpClient();
-                    await client.ConnectAsync(iPSlaveAddr, IPSlavePort);
-                    Log("Connected to IP:" + iPSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                    _client = new TcpClient();
+                    await _client.ConnectAsync(_ipSlaveAddr, IpSlavePort);
+                    Log("Connected to IP:" + _ipSlaveAddr.ToString() + " at port: " + IpSlavePort);
                     return 0;
                 }
                 else
                 {
-                    Log("Connection error at IP:" + iPSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                    Log("Connection error at IP:" + _ipSlaveAddr.ToString() + " at port: " + IpSlavePort);
                     return 1;
                 }
             }
@@ -142,11 +153,11 @@ namespace ModbusTCP.Model
         {
             try
             {
-                if (client != null)
+                if (_client != null)
                 {
-                    if (client.Connected)
+                    if (_client.Connected)
                     {
-                        client.Close();
+                        _client.Close();
                         Log("Disconnected successfully");
                         return 0;
                     }
@@ -165,47 +176,45 @@ namespace ModbusTCP.Model
             }
         }
 
-        async public void StartCommunnication(IList<string> monitor)
+        public async void StartCommunication(IList<string> monitor)
         {
             ModbusMsg mm = new ModbusMsg(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
+            NetworkStream stream = _client.GetStream();
 
-            Byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
-            Byte[] responseByteArray = await SendDataAsync(messageByteArray);
-            string hex = BitConverter.ToString(messageByteArray);
-            monitor.Add(hex);
+            while (_client.Connected && _client != null)
+            {
+                byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
 
+                byte[] responseByteArray = await SendDataAsync(messageByteArray, stream);
+                monitor.Add(BitConverter.ToString(messageByteArray));
+                monitor.Add(BitConverter.ToString(responseByteArray));
 
-
-        }
-
-        public async Task<Byte[]> SendDataAsync(Byte[] byteArray)
-        {
-            // Translate the passed message into ASCII and store it as a Byte array.
-            Byte[] data = byteArray;
-
-            // Get a client stream for reading and writing.
-            //  Stream stream = client.GetStream();
-
-            NetworkStream stream = client.GetStream();
-
-            // Send the message to the connected TcpServer. 
-            await stream.WriteAsync(data, 0, data.Length);
-            string hex = BitConverter.ToString(data);
-
-            // Receive the TcpServer.response.
-
-            // Buffer to store the response bytes.
-            data = new Byte[256];
-
-            // Read the first batch of the TcpServer response bytes.
-            stream.ReadTimeout = 3000;
-            Int32 bytes = await stream.ReadAsync(data, 0, data.Length);
-            Byte[] dataReceived = new Byte[bytes];
-            Array.Copy(data, dataReceived, bytes);
+                System.Threading.Thread.Sleep(1000);
+            }
 
             // Close everything.
             stream.Close();
+        }
+
+        public async Task<byte[]> SendDataAsync(byte[] byteArray, NetworkStream ns)
+        {
+            // Translate the passed message into ASCII and store it as a Byte array.
+            byte[] data = byteArray;
+
+            // Send the message to the connected TcpServer. 
+            await ns.WriteAsync(data, 0, data.Length);
+            string hex = BitConverter.ToString(data);
+
+            // Receive the TcpServer.response.
+            // Buffer to store the response bytes.
+            data = new byte[256];
+
+            // Read the first batch of the TcpServer response bytes.
+            ns.ReadTimeout = 3000;
+            Int32 bytes = await ns.ReadAsync(data, 0, data.Length);
+            byte[] dataReceived = new byte[bytes];
+            Array.Copy(data, dataReceived, bytes);
 
             return dataReceived;
         }

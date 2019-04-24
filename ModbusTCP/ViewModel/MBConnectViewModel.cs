@@ -61,7 +61,7 @@ namespace ModbusTCP.ViewModel
                    x =>
                    {
                        Connect();
-                   }, x => _mbtcpconn._ipSet));
+                   }, x => _mbtcpconn.IpSet));
             }
         }
 
@@ -158,9 +158,9 @@ namespace ModbusTCP.ViewModel
                 {
                     IPAddressText = _mbtcpconn.IpSlaveAddrText;
                 }
-                if (e.PropertyName == "IPSlavePort")
+                if (e.PropertyName == "IpSlavePort")
                 {
-                    IPPortText = _mbtcpconn.IPSlavePort.ToString();
+                    IPPortText = _mbtcpconn.IpSlavePort.ToString();
                 }
             }
         }
