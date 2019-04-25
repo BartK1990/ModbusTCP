@@ -190,7 +190,7 @@ namespace ModbusTCP.Model
                 monitor.Add(BitConverter.ToString(messageByteArray));
                 monitor.Add(BitConverter.ToString(responseByteArray));
 
-                System.Threading.Thread.Sleep(1000);
+                await Task.Delay(1000);
             }
 
             // Close everything.
