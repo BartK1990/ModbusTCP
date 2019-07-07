@@ -8,7 +8,6 @@ namespace ModbusTCP.ViewModel
 {
     using Model;
     using System.Collections.ObjectModel;
-    using ModbusTCP;
 
     public class LoggerViewModel
     {

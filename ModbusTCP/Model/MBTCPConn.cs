@@ -27,6 +27,7 @@ namespace ModbusTCP.Model
     {
         private TcpClient _client;
         private IPAddress _ipSlaveAddr;
+        private Int32 _modbusDelay = 1000;
         private List<ModbusMsg> readHoldingRegistersList = new List<ModbusMsg>();
         private string _ipSlaveAddrText;
         public string IpSlaveAddrText
@@ -181,16 +182,17 @@ namespace ModbusTCP.Model
             ModbusMsg mm = new ModbusMsg(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
             NetworkStream stream = _client.GetStream();
+            string timeFormat = "HH:mm:ss| ";
 
             while (_client.Connected && _client != null)
             {
                 byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
 
+                monitor.Add(DateTime.Now.ToString(timeFormat) + BitConverter.ToString(messageByteArray));
                 byte[] responseByteArray = await SendDataAsync(messageByteArray, stream);
-                monitor.Add(BitConverter.ToString(messageByteArray));
-                monitor.Add(BitConverter.ToString(responseByteArray));
+                monitor.Add(DateTime.Now.ToString(timeFormat) + BitConverter.ToString(responseByteArray));
 
-                await Task.Delay(1000);
+                await Task.Delay(_modbusDelay);
             }
 
             // Close everything.
