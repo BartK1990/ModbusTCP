@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ModbusTCP.View"
-             
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="560">
@@ -17,9 +17,9 @@
             <Button Margin="20 0 0 0" Content="START" x:Name="Start_Button" Command="{Binding StartCommand}" Height="30" HorizontalAlignment="Left" Width="100" FontSize="16"/>
         </DockPanel>
         <Grid Grid.Row="1">
-            <ListView Margin="10 10 10 10" VerticalAlignment="Top" ItemsSource="{Binding CommunicationItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
-               
-            </ListView>
+            <local:ListBoxScroll Margin="10 10 10 10" VerticalAlignment="Top" 
+                                 ItemsSource="{Binding Path=CommunicationItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            </local:ListBoxScroll>
         </Grid>
     </Grid>
 </UserControl>
