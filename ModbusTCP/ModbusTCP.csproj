@@ -83,7 +83,7 @@
     <Compile Include="View\MBConnectView.xaml.cs">
       <DependentUpon>MBConnectView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ScrollIntoView_Behavior.cs" />
+    <Compile Include="View\ListControls.cs" />
     <Page Include="UserControls\IPTextBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
