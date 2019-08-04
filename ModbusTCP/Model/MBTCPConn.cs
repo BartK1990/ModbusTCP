@@ -11,15 +11,33 @@ namespace ModbusTCP.Model
     using System.Net.Sockets;
     using System.Runtime.Serialization;
 
-    internal struct ModbusMsg
+    internal struct ModbusAddrQty
     {
         public int Address { get; set; }
         public int Quantity { get; set; }
-        public ModbusMsg(int address, int quantity)
+        public ModbusAddrQty(int address, int quantity)
         {
             this.Address = address;
             this.Quantity = quantity;
         }
+    }
+
+    public struct ModbusMsg
+    {
+        public string Message { get; set; }
+        public ModbusMsgType Type { get; set; }
+
+        public ModbusMsg(string message, ModbusMsgType type)
+        {
+            Message = message;
+            Type = type;
+        }
+    }
+
+    public enum ModbusMsgType
+    {
+        Query = 1,
+        Response = 2
     }
 
     [Serializable]
@@ -28,7 +46,7 @@ namespace ModbusTCP.Model
         private TcpClient _client;
         private IPAddress _ipSlaveAddr;
         private Int32 _modbusDelay = 1000;
-        private List<ModbusMsg> readHoldingRegistersList = new List<ModbusMsg>();
+        private List<ModbusAddrQty> readHoldingRegistersList = new List<ModbusAddrQty>();
         private string _ipSlaveAddrText;
         public string IpSlaveAddrText
         {
@@ -177,9 +195,9 @@ namespace ModbusTCP.Model
             }
         }
 
-        public async Task StartCommunication(IList<string> monitor)
+        public async Task StartCommunication(IList<ModbusMsg> monitor)
         {
-            ModbusMsg mm = new ModbusMsg(1, 1);
+            ModbusAddrQty mm = new ModbusAddrQty(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
             NetworkStream stream = _client.GetStream();
             string timeFormat = "HH:mm:ss| ";
@@ -188,9 +206,9 @@ namespace ModbusTCP.Model
             {
                 byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
 
-                monitor.Add(DateTime.Now.ToString(timeFormat) + BitConverter.ToString(messageByteArray));
+                monitor.Add(new ModbusMsg(DateTime.Now.ToString(timeFormat) + BitConverter.ToString(messageByteArray), ModbusMsgType.Query));
                 byte[] responseByteArray = await SendDataAsync(messageByteArray, stream);
-                monitor.Add(DateTime.Now.ToString(timeFormat) + BitConverter.ToString(responseByteArray));
+                monitor.Add(new ModbusMsg(DateTime.Now.ToString(timeFormat) + BitConverter.ToString(responseByteArray), ModbusMsgType.Response));
 
                 await Task.Delay(_modbusDelay);
             }

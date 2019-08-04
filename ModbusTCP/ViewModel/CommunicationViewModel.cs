@@ -14,9 +14,10 @@ namespace ModbusTCP.ViewModel
 
     public class CommunicationViewModel : ObservableObject
     {
-        private MBTCPConn _mbtcpconn;
-        public ObservableCollection<string> CommunicationItems { get; set; } = new ObservableCollection<string>();
+        private readonly MBTCPConn _mbtcpconn;
+        public ObservableCollection<ModbusMsg> CommunicationItems { get; set; } = new ObservableCollection<ModbusMsg>();
 
+        // ReSharper disable once InconsistentNaming - TCP is a shortcut
         public CommunicationViewModel(MBTCPConn mbTCPConn)
         {
             this._mbtcpconn = mbTCPConn;

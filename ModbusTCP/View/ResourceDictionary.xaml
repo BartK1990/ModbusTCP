@@ -4,6 +4,8 @@
 
     <SolidColorBrush x:Key="TextsBackgroundColor">#FFA4A2A2</SolidColorBrush>
     <SolidColorBrush x:Key="WindowBackgroundColor">#FF000000</SolidColorBrush>
+    <SolidColorBrush x:Key="QueryBackground">LawnGreen</SolidColorBrush>
+    <SolidColorBrush x:Key="ResponseBackground">Red</SolidColorBrush>
     
     <Style x:Key="ListViewBackground" TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="{StaticResource TextsBackgroundColor}"/>

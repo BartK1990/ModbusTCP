@@ -18,7 +18,20 @@
         </DockPanel>
         <Grid Grid.Row="1">
             <local:ListBoxScroll Margin="10 10 10 10" VerticalAlignment="Top" 
-                                 ItemsSource="{Binding Path=CommunicationItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                 ItemsSource="{Binding Path=CommunicationItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                 DisplayMemberPath="Message">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="1">
+                                <Setter Property="Background" Value="{StaticResource QueryBackground}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="2">
+                                <Setter Property="Background" Value="{StaticResource ResponseBackground}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </local:ListBoxScroll>
         </Grid>
     </Grid>
