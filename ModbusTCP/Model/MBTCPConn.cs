@@ -47,6 +47,7 @@ namespace ModbusTCP.Model
         private IPAddress _ipSlaveAddr;
         private Int32 _modbusDelay = 1000;
         private List<ModbusAddrQty> readHoldingRegistersList = new List<ModbusAddrQty>();
+        public bool CommunicationPaused { get; private set; } = false;
         private string _ipSlaveAddrText;
         public string IpSlaveAddrText
         {
@@ -197,12 +198,13 @@ namespace ModbusTCP.Model
 
         public async Task StartCommunication(IList<ModbusMsg> monitor)
         {
+            CommunicationPaused = false;
             ModbusAddrQty mm = new ModbusAddrQty(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
             NetworkStream stream = _client.GetStream();
             string timeFormat = "HH:mm:ss| ";
 
-            while (_client.Connected && _client != null)
+            while (_client.Connected && _client != null && !CommunicationPaused)
             {
                 byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
 
@@ -215,6 +217,11 @@ namespace ModbusTCP.Model
 
             // Close everything.
             stream.Close();
+        }
+
+        public async Task StopCommunication()
+        {
+            CommunicationPaused = true;
         }
 
         public async Task<byte[]> SendDataAsync(byte[] byteArray, NetworkStream ns)

@@ -10,7 +10,6 @@ namespace ModbusTCP.ViewModel
     using System.Collections.ObjectModel;
     using System.Windows.Input;
     using Microsoft.Win32;
-    using ModbusTCP;
     using System.ComponentModel;
 
     public class MBConnectViewModel : ObservableObject

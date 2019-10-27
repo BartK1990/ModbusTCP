@@ -35,5 +35,17 @@ namespace ModbusTCP.ViewModel
                    }, x => _mbtcpconn.Connected));
             }
         }
+        private ICommand _pauseCommand;
+        public ICommand PauseCommand
+        {
+            get
+            {
+                return _pauseCommand ?? (_pauseCommand = new RelayCommand(
+                           x =>
+                           {
+                               _mbtcpconn.StopCommunication();
+                           }, x => _mbtcpconn.Connected));
+            }
+        }
     }
 }
