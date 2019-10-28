@@ -15,7 +15,11 @@
         <Setter Property="Background" Value="{StaticResource TextsBackgroundColor}"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
-    
+
+    <Style x:Key="TextBlockBackground" TargetType="{x:Type TextBlock}">
+        <Setter Property="Background" Value="{StaticResource TextsBackgroundColor}"/>
+    </Style>
+
     <Style x:Key="DataGridBackground" TargetType="{x:Type DataGrid}">
         <Setter Property="Background" Value="{StaticResource TextsBackgroundColor}"/>
     </Style>

@@ -31,7 +31,7 @@ namespace ModbusTCP.ViewModel
             set { this.SetAndNotify(ref this.ipAddressText, value, () => this.IPAddressText); }
         }
 
-        private string ipPortText;
+        private string ipPortText = "502";
         public string IPPortText
         {
             get { return this.ipPortText; }
