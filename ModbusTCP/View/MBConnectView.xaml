@@ -8,6 +8,7 @@
              xmlns:viewmodel="clr-namespace:ModbusTCP.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="560">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,7 +20,7 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Height="28">
             <Button Margin="10 0 0 0" x:Name="SetIP" Command="{Binding SetIPCommand}" Content="SET IP" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="80" FontSize="16"/>
-            <UserControls:IPTextBox x:Name="IPTextBox" Address="{Binding IPAddressText}" Margin="20 0 0 0" IsEnabled="{Binding ElementName=LocalhostCheckBox, Path=IsChecked}"/>
+            <UserControls:IPTextBox x:Name="IPTextBox" Address="{Binding IPAddressText}" Margin="20 0 0 0" IsEnabled="{Binding ElementName=LocalhostCheckBox, Path=IsChecked, Converter={StaticResource InverseBooleanConverter}}"/>
             <TextBox Margin="10 0 0 0" Style="{StaticResource IPBoxBackground}" x:Name="IPPortDesc" IsReadOnly="True" Focusable="False" VerticalAlignment="Top" HorizontalAlignment="Left" Height="28" TextAlignment="Center" VerticalContentAlignment="Center" Width="60" FontSize="16" Text="PORT:"/>
             <UserControls:IPPortTextBox x:Name="IPPortTextBox" Port="{Binding IPPortText}" Margin="10 0 0 0"/>
             <Border BorderBrush="Black" BorderThickness="0" Background="{StaticResource ResourceKey=TextsBackgroundColor}" Margin="10 0 0 0">
