@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace ModbusTCP.ViewModel
 {
-
     using System.ComponentModel;
     using System.Linq.Expressions;
 

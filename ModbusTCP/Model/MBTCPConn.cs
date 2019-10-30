@@ -48,19 +48,19 @@ namespace ModbusTCP.Model
         private Int32 _modbusDelay = 1000;
         private List<ModbusAddrQty> readHoldingRegistersList = new List<ModbusAddrQty>();
         public bool CommunicationPaused { get; private set; } = false;
-        private string _ipSlaveAddrText;
-        public string IpSlaveAddrText
+        private string _ipSlaveAddressText;
+        public string IPSlaveAddressText
         {
             get { return _ipSlaveAddr.ToString(); }
             private set
-                { this.SetAndNotify(ref this._ipSlaveAddrText, value, () => this.IpSlaveAddrText); }
+                { this.SetAndNotify(ref this._ipSlaveAddressText, value, () => this.IPSlaveAddressText); }
         }
         private int _ipSlavePort;
-        public int IpSlavePort
+        public int IPSlavePort
         {
             get { return _ipSlavePort; }
             private set
-                { this.SetAndNotify(ref this._ipSlavePort, value, () => this.IpSlavePort); }
+                { this.SetAndNotify(ref this._ipSlavePort, value, () => this.IPSlavePort); }
         }
         private bool _ipAddrSet = false;
         private bool _ipPortSet = false;
@@ -79,32 +79,32 @@ namespace ModbusTCP.Model
 
         public MBTCPConn()
         {
-            IpSlavePort = -1;
+            IPSlavePort = -1;
         }
         public MBTCPConn(ILog logger)
         {
-            IpSlavePort = -1;
+            IPSlavePort = -1;
             this._logger = logger;
         }
 
         public void CopyParametersAndInit(MBTCPConn mbTCPConn)
         {
-            SetSlaveIPv4Addr(mbTCPConn.IpSlaveAddrText);
-            SetSlaveIPPort(mbTCPConn.IpSlavePort);
+            SetSlaveIPv4Address(mbTCPConn.IPSlaveAddressText);
+            SetSlaveIPPort(mbTCPConn.IPSlavePort);
         }
 
         //Deserialization constructor.
         public MBTCPConn(SerializationInfo info, StreamingContext context)
         {
-            SetSlaveIPv4Addr((string)info.GetValue("ipAddressText", typeof(string)));
+            SetSlaveIPv4Address((string)info.GetValue("ipAddressText", typeof(string)));
             SetSlaveIPPort((int)info.GetValue("ipPort", typeof(int)));
         }
 
         //Serialization function.
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("ipAddressText", IpSlaveAddrText);
-            info.AddValue("ipPort", IpSlavePort);
+            info.AddValue("ipAddressText", IPSlaveAddressText);
+            info.AddValue("ipPort", IPSlavePort);
         }
 
         private void Log(string message)
@@ -113,12 +113,12 @@ namespace ModbusTCP.Model
                 _logger.Log(message);
         }
 
-        public int SetSlaveIPv4Addr(string ipAddr)
+        public int SetSlaveIPv4Address(string ipAddr)
         {
             if (IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
                 _ipSlaveAddr = ip;
-                IpSlaveAddrText = _ipSlaveAddr.ToString();
+                IPSlaveAddressText = _ipSlaveAddr.ToString();
                 Log("Ip Address Set");
                 _ipAddrSet = true;
                 return 0;
@@ -134,7 +134,7 @@ namespace ModbusTCP.Model
         {
             if ((port >= 0) && (port <= 65535))
             {
-                IpSlavePort = port;
+                IPSlavePort = port;
                 Log("Ip Port set");
                 _ipPortSet = true;
                 return 0;
@@ -150,16 +150,16 @@ namespace ModbusTCP.Model
         {
             try
             {
-                if ((_ipSlaveAddr != null) && (IpSlavePort > -1))
+                if ((_ipSlaveAddr != null) && (IPSlavePort > -1))
                 {
                     _client = new TcpClient();
-                    await _client.ConnectAsync(_ipSlaveAddr, IpSlavePort);
-                    Log("Connected to IP:" + _ipSlaveAddr.ToString() + " at port: " + IpSlavePort);
+                    await _client.ConnectAsync(_ipSlaveAddr, IPSlavePort);
+                    Log("Connected to IP:" + _ipSlaveAddr.ToString() + " at port: " + IPSlavePort);
                     return 0;
                 }
                 else
                 {
-                    Log("Connection error at IP:" + _ipSlaveAddr.ToString() + " at port: " + IpSlavePort);
+                    Log("Connection error at IP:" + _ipSlaveAddr.ToString() + " at port: " + IPSlavePort);
                     return 1;
                 }
             }

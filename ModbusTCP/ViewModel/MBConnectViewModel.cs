@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ModbusTCP.ViewModel
+﻿namespace ModbusTCP.ViewModel
 {
+    using Microsoft.Win32;
     using Model;
     using System.Collections.ObjectModel;
-    using System.Windows.Input;
-    using Microsoft.Win32;
     using System.ComponentModel;
+    using System.Windows.Input;
 
     public class MBConnectViewModel : ObservableObject
     {
@@ -24,11 +18,25 @@ namespace ModbusTCP.ViewModel
             this._mbtcpconn.PropertyChanged += MBTCPConnEventHandler;
         }
 
+        private string ipAddressSetText; // IP address that is set in MBTCP object
+        public string IPAddressSetText
+        {
+            get { return this.ipAddressSetText; }
+            set { this.SetAndNotify(ref this.ipAddressSetText, value, () => this.IPAddressSetText); }
+        }
+
         private string ipAddressText;
         public string IPAddressText
         {
             get { return this.ipAddressText; }
             set { this.SetAndNotify(ref this.ipAddressText, value, () => this.IPAddressText); }
+        }
+
+        private string ipPortSetText;
+        public string IPPortSetText
+        {
+            get { return this.ipPortSetText; }
+            set { this.SetAndNotify(ref this.ipPortSetText, value, () => this.IPPortSetText); }
         }
 
         private string ipPortText = "502";
@@ -105,7 +113,7 @@ namespace ModbusTCP.ViewModel
 
         public void SetSlaveIPAddrAndPort()
         {
-            _mbtcpconn.SetSlaveIPv4Addr(IPAddressText);
+            _mbtcpconn.SetSlaveIPv4Address(IPAddressText);
             if (int.TryParse(IPPortText, out int portInt))
             {
                 _mbtcpconn.SetSlaveIPPort(portInt);
@@ -153,13 +161,13 @@ namespace ModbusTCP.ViewModel
         {
             if (!string.IsNullOrEmpty(e.PropertyName))
             {
-                if(e.PropertyName == "IpSlaveAddrText")
+                if(e.PropertyName == "IPSlaveAddressText")
                 {
-                    IPAddressText = _mbtcpconn.IpSlaveAddrText;
+                    IPAddressSetText = _mbtcpconn.IPSlaveAddressText;
                 }
-                if (e.PropertyName == "IpSlavePort")
+                if (e.PropertyName == "IPSlavePort")
                 {
-                    IPPortText = _mbtcpconn.IpSlavePort.ToString();
+                    IPPortSetText = _mbtcpconn.IPSlavePort.ToString();
                 }
             }
         }

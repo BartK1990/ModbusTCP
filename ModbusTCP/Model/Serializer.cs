@@ -16,7 +16,9 @@ namespace ModbusTCP.Model
         {
             var ds = new DataContractSerializer(typeof(T));
             using (Stream s = File.Create(filename))
-            ds.WriteObject(s, object_to_serialize);
+            {
+                ds.WriteObject(s, object_to_serialize);
+            }
         }
 
         public void DataContract_Deserialize<T>(out T deserialize_dest, string filename)
