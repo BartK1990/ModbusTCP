@@ -1,4 +1,6 @@
-﻿namespace ModbusTCP.ViewModel
+﻿using System.Net;
+
+namespace ModbusTCP.ViewModel
 {
     using Microsoft.Win32;
     using Model;
@@ -16,6 +18,13 @@
             this._mbtcpconn = mbTCPConn;
             windowLogger.LoggerUpdated += LoggerUpdatedEventHandler;
             this._mbtcpconn.PropertyChanged += MBTCPConnEventHandler;
+        }
+
+        private bool ipAddressSetLoopback; // If loopback address
+        public bool IPAddressSetLoopback
+        {
+            get { return this.ipAddressSetLoopback; }
+            set { this.SetAndNotify(ref this.ipAddressSetLoopback, value, () => this.IPAddressSetLoopback); }
         }
 
         private string ipAddressSetText; // IP address that is set in MBTCP object
@@ -113,7 +122,10 @@
 
         public void SetSlaveIPAddrAndPort()
         {
-            _mbtcpconn.SetSlaveIPv4Address(IPAddressText);
+            if(ipAddressSetLoopback)
+                _mbtcpconn.SetSlaveIPv4Address(IPAddress.Loopback.ToString());
+            else
+                _mbtcpconn.SetSlaveIPv4Address(IPAddressText);
             if (int.TryParse(IPPortText, out int portInt))
             {
                 _mbtcpconn.SetSlaveIPPort(portInt);

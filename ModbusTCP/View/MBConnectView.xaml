@@ -24,7 +24,7 @@
             <TextBox Margin="10 0 0 0" Style="{StaticResource IPBoxBackground}" x:Name="IPPortDesc" IsReadOnly="True" Focusable="False" VerticalAlignment="Top" HorizontalAlignment="Left" Height="28" TextAlignment="Center" VerticalContentAlignment="Center" Width="60" FontSize="16" Text="PORT:"/>
             <UserControls:IPPortTextBox x:Name="IPPortTextBox" Port="{Binding IPPortText}" Margin="10 0 0 0"/>
             <Border BorderBrush="Black" BorderThickness="0" Background="{StaticResource ResourceKey=TextsBackgroundColor}" Margin="10 0 0 0">
-                <CheckBox x:Name="LocalhostCheckBox" VerticalAlignment="Center" Content="Localhost" Margin="5 0 5 0"/>
+                <CheckBox x:Name="LocalhostCheckBox" VerticalAlignment="Center" Content="Localhost" Margin="5 0 5 0" IsChecked="{Binding IPAddressSetLoopback}"/>
             </Border>
 
         </StackPanel>

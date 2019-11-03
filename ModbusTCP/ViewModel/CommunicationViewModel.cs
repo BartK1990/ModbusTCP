@@ -29,10 +29,10 @@ namespace ModbusTCP.ViewModel
             get
             {
                 return _startCommand ?? (_startCommand = new RelayCommand(
-                   x =>
-                   {
+                    x =>
+                    {
                        _mbtcpconn.StartCommunication(CommunicationItems);
-                   }, x => _mbtcpconn.Connected));
+                    }, x => _mbtcpconn.Connected));
             }
         }
         private ICommand _pauseCommand;
@@ -41,10 +41,10 @@ namespace ModbusTCP.ViewModel
             get
             {
                 return _pauseCommand ?? (_pauseCommand = new RelayCommand(
-                           x =>
-                           {
-                               _mbtcpconn.StopCommunication();
-                           }, x => _mbtcpconn.Connected));
+                    x =>
+                    {
+                       _mbtcpconn.StopCommunication();
+                    }, x => _mbtcpconn.Connected));
             }
         }
     }
