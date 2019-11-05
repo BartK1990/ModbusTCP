@@ -38,10 +38,10 @@ namespace ModbusTCP.View
             communicationView = new CommunicationView();
 
             // Initialize ViewModel and assign to DataContext for window
-            this.DataContext = new ViewModel.MBConnectViewModel(mbTCPConn, windowLogger);
+            this.DataContext = new ViewModel.CommunicationViewModel(mbTCPConn, windowLogger);
             mbConnectView.DataContext = this.DataContext;
+            communicationView.DataContext = this.DataContext;
             loggerView.DataContext = new ViewModel.LoggerViewModel(windowLogger);
-            communicationView.DataContext = new ViewModel.CommunicationViewModel(mbTCPConn);
         }
 
         private void MenuConnect_button_Click(object sender, RoutedEventArgs e)

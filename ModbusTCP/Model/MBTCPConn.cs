@@ -47,8 +47,8 @@ namespace ModbusTCP.Model
         private IPAddress _ipSlaveAddr;
         private Int32 _modbusDelay = 1000;
         private List<ModbusAddrQty> readHoldingRegistersList = new List<ModbusAddrQty>();
-        public bool CommunicationPaused { get; private set; } = false;
         private string _ipSlaveAddressText;
+        public bool CommunicationInProgress { get; private set; }
         public string IPSlaveAddressText
         {
             get { return _ipSlaveAddr.ToString(); }
@@ -198,30 +198,35 @@ namespace ModbusTCP.Model
 
         public async Task StartCommunication(IList<ModbusMsg> monitor)
         {
-            CommunicationPaused = false;
             ModbusAddrQty mm = new ModbusAddrQty(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
             NetworkStream stream = _client.GetStream();
             string timeFormat = "HH:mm:ss| ";
-
-            while (_client.Connected && _client != null && !CommunicationPaused)
+            try
             {
-                byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
+                while (_client.Connected && _client != null)
+                {
+                    CommunicationInProgress = true;
+                    byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
 
-                monitor.Add(new ModbusMsg(DateTime.Now.ToString(timeFormat) + BitConverter.ToString(messageByteArray), ModbusMsgType.Query));
-                byte[] responseByteArray = await SendDataAsync(messageByteArray, stream);
-                monitor.Add(new ModbusMsg(DateTime.Now.ToString(timeFormat) + BitConverter.ToString(responseByteArray), ModbusMsgType.Response));
+                    monitor.Add(new ModbusMsg(
+                        DateTime.Now.ToString(timeFormat) + BitConverter.ToString(messageByteArray),
+                        ModbusMsgType.Query));
+                    byte[] responseByteArray = await SendDataAsync(messageByteArray, stream);
+                    monitor.Add(new ModbusMsg(
+                        DateTime.Now.ToString(timeFormat) + BitConverter.ToString(responseByteArray),
+                        ModbusMsgType.Response));
 
-                await Task.Delay(_modbusDelay);
+                    await Task.Delay(_modbusDelay); // Delay to make pause between messages
+                }
             }
-
-            // Close everything.
-            stream.Close();
-        }
-
-        public async Task StopCommunication()
-        {
-            CommunicationPaused = true;
+            finally
+            {
+                // Change flag
+                CommunicationInProgress = false;
+                // Close everything.
+                stream.Close();
+            }
         }
 
         public async Task<byte[]> SendDataAsync(byte[] byteArray, NetworkStream ns)
