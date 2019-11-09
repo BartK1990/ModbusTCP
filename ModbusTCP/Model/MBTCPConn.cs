@@ -48,7 +48,6 @@ namespace ModbusTCP.Model
         private Int32 _modbusDelay = 1000;
         private List<ModbusAddrQty> readHoldingRegistersList = new List<ModbusAddrQty>();
         private string _ipSlaveAddressText;
-        public bool CommunicationInProgress { get; private set; }
         public string IPSlaveAddressText
         {
             get { return _ipSlaveAddr.ToString(); }
@@ -206,7 +205,6 @@ namespace ModbusTCP.Model
             {
                 while (_client.Connected && _client != null)
                 {
-                    CommunicationInProgress = true;
                     byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
 
                     monitor.Add(new ModbusMsg(
@@ -222,8 +220,6 @@ namespace ModbusTCP.Model
             }
             finally
             {
-                // Change flag
-                CommunicationInProgress = false;
                 // Close everything.
                 stream.Close();
             }

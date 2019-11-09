@@ -15,7 +15,7 @@ namespace ModbusTCP.ViewModel
                            x =>
                            {
                                _mbtcpconn.StartCommunication(CommunicationItems);
-                           }, x => (_mbtcpconn.Connected && !_mbtcpconn.CommunicationInProgress)));
+                           }, x => (_mbtcpconn.Connected)));
             }
         }
     }
