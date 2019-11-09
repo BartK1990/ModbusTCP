@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -45,7 +46,8 @@ namespace ModbusTCP.Model
     {
         private TcpClient _client;
         private IPAddress _ipSlaveAddr;
-        private Int32 _modbusDelay = 1000;
+        private Int32 _modbusDelay = 1000; // in milliseconds
+        private Int16 _connectingTimeout = 30000; // in milliseconds
         private List<ModbusAddrQty> readHoldingRegistersList = new List<ModbusAddrQty>();
         private string _ipSlaveAddressText;
         public string IPSlaveAddressText
@@ -68,8 +70,8 @@ namespace ModbusTCP.Model
         {
             get
             {
-                if (this._client != null)
-                    return _client.Connected;
+                if (this._client != null && this._client.Client != null)
+                    return this._client.Connected;
                 else
                     return false;
             }
@@ -145,22 +147,28 @@ namespace ModbusTCP.Model
             }
         }
 
-        public async Task<int> ConnectAsync()
+        public void Connect()
+        {
+            ConnectAsync();
+        }
+
+        public async Task ConnectAsync()
         {
             try
             {
+                // This check should be done in some better way
                 if ((_ipSlaveAddr != null) && (IPSlavePort > -1))
                 {
                     _client = new TcpClient();
-                    await _client.ConnectAsync(_ipSlaveAddr, IPSlavePort);
-                    Log("Connected to IP:" + _ipSlaveAddr.ToString() + " at port: " + IPSlavePort);
-                    return 0;
+                    // Async connection limited by configurable property in milliseconds
+                    var executionInTime = await Task.Run(() => (_client.ConnectAsync(_ipSlaveAddr, IPSlavePort)).Wait(_connectingTimeout));
+                    if (executionInTime)
+                    {
+                        Log("Connected to IP:" + _ipSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                        return;
+                    }
                 }
-                else
-                {
-                    Log("Connection error at IP:" + _ipSlaveAddr.ToString() + " at port: " + IPSlavePort);
-                    return 1;
-                }
+                Log("Connection error at IP:" + _ipSlaveAddr.ToString() + " at port: " + IPSlavePort);
             }
             catch
             {
