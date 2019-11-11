@@ -14,7 +14,7 @@ namespace ModbusTCP.ViewModel
                 return _startCommand ?? (_startCommand = new RelayCommand(
                            x =>
                            {
-                               _mbtcpconn.StartCommunication(CommunicationItems);
+                               _ =_mbtcpconn.StartCommunication(CommunicationItems);
                            }, x => (_mbtcpconn.Connected)));
             }
         }

@@ -142,7 +142,7 @@ namespace ModbusTCP.ViewModel
 
         public void Connect()
         {
-            _mbtcpconn.Connect();
+            _mbtcpconn.ConnectAsync();
         }
 
         public void Disconnect()

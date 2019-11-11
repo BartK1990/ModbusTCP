@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -22,7 +23,6 @@ namespace ModbusTCP.Model
             this.Quantity = quantity;
         }
     }
-
     public struct ModbusMsg
     {
         public string Message { get; set; }
@@ -34,7 +34,6 @@ namespace ModbusTCP.Model
             Type = type;
         }
     }
-
     public enum ModbusMsgType
     {
         Query = 1,
@@ -45,14 +44,14 @@ namespace ModbusTCP.Model
     public class MBTCPConn : ObservableObject, ISerializable
     {
         private TcpClient _client;
-        private IPAddress _ipSlaveAddr;
         private Int32 _modbusDelay = 1000; // in milliseconds
-        private Int16 _connectingTimeout = 30000; // in milliseconds
+        private Int16 _connectingTimeout = 5000; // in milliseconds
         private List<ModbusAddrQty> readHoldingRegistersList = new List<ModbusAddrQty>();
+        private IPAddress _ipSlaveAddress;
         private string _ipSlaveAddressText;
         public string IPSlaveAddressText
         {
-            get { return _ipSlaveAddr.ToString(); }
+            get { return _ipSlaveAddress.ToString(); }
             private set
                 { this.SetAndNotify(ref this._ipSlaveAddressText, value, () => this.IPSlaveAddressText); }
         }
@@ -87,39 +86,32 @@ namespace ModbusTCP.Model
             IPSlavePort = -1;
             this._logger = logger;
         }
-
         public void CopyParametersAndInit(MBTCPConn mbTCPConn)
         {
             SetSlaveIPv4Address(mbTCPConn.IPSlaveAddressText);
             SetSlaveIPPort(mbTCPConn.IPSlavePort);
         }
-
-        //Deserialization constructor.
-        public MBTCPConn(SerializationInfo info, StreamingContext context)
+        public MBTCPConn(SerializationInfo info, StreamingContext context) //Deserialization constructor
         {
             SetSlaveIPv4Address((string)info.GetValue("ipAddressText", typeof(string)));
             SetSlaveIPPort((int)info.GetValue("ipPort", typeof(int)));
         }
-
-        //Serialization function.
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public void GetObjectData(SerializationInfo info, StreamingContext context) //Serialization function
         {
             info.AddValue("ipAddressText", IPSlaveAddressText);
             info.AddValue("ipPort", IPSlavePort);
         }
-
         private void Log(string message)
         {
             if (_logger != null)
                 _logger.Log(message);
         }
-
         public int SetSlaveIPv4Address(string ipAddr)
         {
             if (IPAddress.TryParse(ipAddr, out IPAddress ip))
             {
-                _ipSlaveAddr = ip;
-                IPSlaveAddressText = _ipSlaveAddr.ToString();
+                _ipSlaveAddress = ip;
+                IPSlaveAddressText = _ipSlaveAddress.ToString();
                 Log("Ip Address Set");
                 _ipAddrSet = true;
                 return 0;
@@ -130,7 +122,6 @@ namespace ModbusTCP.Model
                 return 1;
             }
         }
-
         public int SetSlaveIPPort(int port)
         {
             if ((port >= 0) && (port <= 65535))
@@ -146,36 +137,38 @@ namespace ModbusTCP.Model
                 return 1;
             }
         }
-
-        public void Connect()
-        {
-            ConnectAsync();
-        }
-
-        public async Task ConnectAsync()
+        public async void ConnectAsync()
         {
             try
             {
                 // This check should be done in some better way
-                if ((_ipSlaveAddr != null) && (IPSlavePort > -1))
+                if ((_ipSlaveAddress != null) && (IPSlavePort > -1))
                 {
                     _client = new TcpClient();
                     // Async connection limited by configurable property in milliseconds
-                    var executionInTime = await Task.Run(() => (_client.ConnectAsync(_ipSlaveAddr, IPSlavePort)).Wait(_connectingTimeout));
+                    var executionInTime = await Task.Run(() =>
+                        _client.ConnectAsync(_ipSlaveAddress, IPSlavePort).Wait(_connectingTimeout));
                     if (executionInTime)
                     {
-                        Log("Connected to IP:" + _ipSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                        Log("Connected. IP:" + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
+                        return;
+                    }
+                    else
+                    {
+                        Log("Connection timeout. IP:" + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
                         return;
                     }
                 }
-                Log("Connection error at IP:" + _ipSlaveAddr.ToString() + " at port: " + IPSlavePort);
+                else
+                {
+                    Log("Wrong connection parameters. IP:" + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
+                }
             }
             catch
             {
-                throw;
+                Log("Connection error at IP." + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
             }
         }
-
         public int Disconnect()
         {
             try
@@ -202,7 +195,6 @@ namespace ModbusTCP.Model
                 throw;
             }
         }
-
         public async Task StartCommunication(IList<ModbusMsg> monitor)
         {
             ModbusAddrQty mm = new ModbusAddrQty(1, 1);
@@ -232,7 +224,6 @@ namespace ModbusTCP.Model
                 stream.Close();
             }
         }
-
         public async Task<byte[]> SendDataAsync(byte[] byteArray, NetworkStream ns)
         {
             // Translate the passed message into ASCII and store it as a Byte array.
@@ -254,6 +245,5 @@ namespace ModbusTCP.Model
 
             return dataReceived;
         }
-
     }
 }
