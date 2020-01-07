@@ -24,12 +24,54 @@
                     <Separator />
                     <MenuItem Header="_Exit" />
                 </MenuItem>
+                <MenuItem Header="_Connection">
+                    <MenuItem Header="_Connect" />
+                    <MenuItem Header="_Disconnect" Command="{Binding OpenCommand}"/>
+                </MenuItem>
             </Menu>
         </DockPanel>
-        <StackPanel Grid.Row="1" Grid.Column="0">
-            <Button x:Name="MenuConnect_button" Margin="0 20 0 0" Height="30" Content="Connect" Click="MenuConnect_button_Click"/>
-            <Button x:Name="MenuCommunication_button" Margin="0 20 0 0" Height="30" Content="Communication" Click="MenuCommunication_button_Click"/>
-            <Button x:Name="MenuLogger_button" Margin="0 20 0 0" Height="30" Content="Logger" Click="MenuLogger_button_Click"/>
+        <StackPanel Grid.Row="1" Grid.Column="0" Name="LeftMenuStackPanel">
+            <Button x:Name="MenuConnect_button" Margin="0 10 0 0" Height="30" Content="Connect" Click="MenuConnect_button_Click"/>
+            <Button x:Name="MenuCommunication_button" Margin="0 0 0 0" Height="30" Content="Communication" Click="MenuCommunication_button_Click"/>
+            <Button x:Name="MenuLogger_button" Margin="0 0 0 0" Height="30" Content="Logger" Click="MenuLogger_button_Click"/>
+            <DockPanel Margin="0,10,0,0">
+                <Border BorderBrush="LightGray" BorderThickness="2"
+                        Visibility="{Binding ConnectionStatus, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel>
+                        <StackPanel.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="#FF919191" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">Connection</TextBlock>
+                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">Active to IP:</TextBlock>
+                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">192.168.192.322</TextBlock>
+                        <Button IsEnabled="{Binding ConnectionStatus, Mode=OneWay}">sadfsda</Button>
+                        <TextBlock
+                            Name="MyBouncingBall"
+                            Margin="0 0 0 0"
+                            Width="12" Height="20" FontSize="12" FontWeight="Bold" TextAlignment="Right"
+                            HorizontalAlignment="Left">
+                            ⬤
+                            <!--Animates the text block's width.-->
+                            <TextBlock.Triggers>
+                                <EventTrigger RoutedEvent="TextBlock.Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="MyBouncingBall"
+                                                Storyboard.TargetProperty="(TextBlock.Width)"
+                                                To="{Binding RelativeSource={RelativeSource AncestorType=StackPanel, AncestorLevel=1}, Path=ActualWidth}"
+                                                Duration="0:0:01"
+                                                AutoReverse="True" RepeatBehavior="Forever" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </TextBlock.Triggers>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
         </StackPanel>
         <DockPanel Grid.Row="1" Grid.Column="1">
             <ContentControl x:Name="WindowContent"/>

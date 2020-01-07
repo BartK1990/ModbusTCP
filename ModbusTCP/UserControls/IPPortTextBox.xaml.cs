@@ -31,8 +31,8 @@ namespace ModbusTCP.UserControls
 
         public string Port
         {
-            get { return (string)GetValue(PortProperty); }
-            set { SetValue(PortProperty, value); }
+            get => (string)GetValue(PortProperty);
+            set => SetValue(PortProperty, value);
         }
         public static readonly DependencyProperty PortProperty =
             DependencyProperty.Register("Port", typeof(string), typeof(IPPortTextBox), new FrameworkPropertyMetadata(default(string), PortChanged)

@@ -22,6 +22,11 @@ namespace ModbusTCP.ViewModel
             }
         }
 
+        protected virtual void Notify<T>( T value, Expression<Func<T>> property)
+        {
+            this.OnPropertyChanged(property);
+        }
+
         protected virtual void OnPropertyChanged<T>(Expression<Func<T>> changedProperty)
         {
             if (PropertyChanged != null)

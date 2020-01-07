@@ -51,20 +51,27 @@ namespace ModbusTCP.Model
         private string _ipSlaveAddressText;
         public string IPSlaveAddressText
         {
-            get { return _ipSlaveAddress.ToString(); }
+            get => _ipSlaveAddress.ToString();
             private set
                 { this.SetAndNotify(ref this._ipSlaveAddressText, value, () => this.IPSlaveAddressText); }
         }
         private int _ipSlavePort;
         public int IPSlavePort
         {
-            get { return _ipSlavePort; }
+            get => _ipSlavePort;
             private set
                 { this.SetAndNotify(ref this._ipSlavePort, value, () => this.IPSlavePort); }
         }
-        private bool _ipAddrSet = false;
+        private bool _ipAddressSet = false;
         private bool _ipPortSet = false;
-        public bool IpSet { get { return _ipAddrSet && _ipPortSet; } }
+        public bool IpSet => _ipAddressSet && _ipPortSet;
+        private bool _connectionStatus;
+        public bool ConnectionStatus
+        {
+            get => _connectionStatus;
+            private set
+            { this.SetAndNotify(ref this._connectionStatus, value, () => this.ConnectionStatus); }
+        }
         public bool Connected
         {
             get
@@ -75,6 +82,10 @@ namespace ModbusTCP.Model
                     return false;
             }
         }
+
+        public string MessageSent { get; private set; }
+        public string MessageReceived { get; private set; }
+
         private readonly ILog _logger;
 
         public MBTCPConn()
@@ -113,7 +124,7 @@ namespace ModbusTCP.Model
                 _ipSlaveAddress = ip;
                 IPSlaveAddressText = _ipSlaveAddress.ToString();
                 Log("Ip Address Set");
-                _ipAddrSet = true;
+                _ipAddressSet = true;
                 return 0;
             }
             else
@@ -151,6 +162,7 @@ namespace ModbusTCP.Model
                     if (executionInTime)
                     {
                         Log("Connected. IP:" + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
+                        ConnectionStatus = true;
                         return;
                     }
                     else
@@ -169,6 +181,11 @@ namespace ModbusTCP.Model
                 Log("Connection error at IP." + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
             }
         }
+
+        private async void CheckConnection() //periodically check TCP connection until communication is not started
+        {
+
+        }
         public int Disconnect()
         {
             try
@@ -179,6 +196,7 @@ namespace ModbusTCP.Model
                     {
                         _client.Close();
                         Log("Disconnected successfully");
+                        ConnectionStatus = false;
                         return 0;
                     }
                     Log("Disconnecting fault. There was no connection");
@@ -206,11 +224,12 @@ namespace ModbusTCP.Model
                 while (_client.Connected && _client != null)
                 {
                     byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
-
                     monitor.Add(new ModbusMsg(
                         DateTime.Now.ToString(timeFormat) + BitConverter.ToString(messageByteArray),
                         ModbusMsgType.Query));
+                    MessageSent = BitConverter.ToString(messageByteArray);
                     byte[] responseByteArray = await SendDataAsync(messageByteArray, stream);
+                    MessageReceived = BitConverter.ToString(responseByteArray);
                     monitor.Add(new ModbusMsg(
                         DateTime.Now.ToString(timeFormat) + BitConverter.ToString(responseByteArray),
                         ModbusMsgType.Response));
@@ -224,7 +243,7 @@ namespace ModbusTCP.Model
                 stream.Close();
             }
         }
-        public async Task<byte[]> SendDataAsync(byte[] byteArray, NetworkStream ns)
+        private async Task<byte[]> SendDataAsync(byte[] byteArray, NetworkStream ns)
         {
             // Translate the passed message into ASCII and store it as a Byte array.
             byte[] data = byteArray;

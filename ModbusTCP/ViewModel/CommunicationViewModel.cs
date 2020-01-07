@@ -28,38 +28,45 @@ namespace ModbusTCP.ViewModel
             this._mbtcpconn.PropertyChanged += MBTCPConnEventHandler;
         }
 
+        private bool connectionStatus; // If loopback address
+        public bool ConnectionStatus
+        {
+            get => this.connectionStatus;
+            set { this.SetAndNotify(ref this.connectionStatus, value, () => this.ConnectionStatus); }
+        }
+
         private bool ipAddressSetLoopback; // If loopback address
         public bool IPAddressSetLoopback
         {
-            get { return this.ipAddressSetLoopback; }
+            get => this.ipAddressSetLoopback;
             set { this.SetAndNotify(ref this.ipAddressSetLoopback, value, () => this.IPAddressSetLoopback); }
         }
 
         private string ipAddressSetText; // IP address that is set in MBTCP object
         public string IPAddressSetText
         {
-            get { return this.ipAddressSetText; }
+            get => this.ipAddressSetText;
             set { this.SetAndNotify(ref this.ipAddressSetText, value, () => this.IPAddressSetText); }
         }
 
         private string ipAddressText;
         public string IPAddressText
         {
-            get { return this.ipAddressText; }
+            get => this.ipAddressText;
             set { this.SetAndNotify(ref this.ipAddressText, value, () => this.IPAddressText); }
         }
 
         private string ipPortSetText;
         public string IPPortSetText
         {
-            get { return this.ipPortSetText; }
+            get => this.ipPortSetText;
             set { this.SetAndNotify(ref this.ipPortSetText, value, () => this.IPPortSetText); }
         }
 
         private string ipPortText = "502";
         public string IPPortText
         {
-            get { return this.ipPortText; }
+            get => this.ipPortText;
             set { this.SetAndNotify(ref this.ipPortText, value, () => this.IPPortText); }
         }
 
@@ -188,6 +195,10 @@ namespace ModbusTCP.ViewModel
                 if (e.PropertyName == "IPSlavePort")
                 {
                     IPPortSetText = _mbtcpconn.IPSlavePort.ToString();
+                }
+                if (e.PropertyName == "ConnectionStatus")
+                {
+                    ConnectionStatus = _mbtcpconn.ConnectionStatus;
                 }
             }
         }

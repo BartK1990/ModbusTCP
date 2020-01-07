@@ -35,8 +35,8 @@ namespace ModbusTCP.UserControls
             
         public string Address
         {
-            get { return (string)GetValue(AddressProperty); }
-            set { SetValue(AddressProperty, value); }
+            get => (string)GetValue(AddressProperty);
+            set => SetValue(AddressProperty, value);
         }
         public static readonly DependencyProperty AddressProperty =
            DependencyProperty.Register("Address", typeof(string), typeof(IPTextBox), new FrameworkPropertyMetadata(default(string), AddressChanged)

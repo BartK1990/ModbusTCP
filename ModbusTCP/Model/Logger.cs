@@ -8,6 +8,17 @@ using System.Threading.Tasks;
 namespace ModbusTCP.Model
 {
 
+    public class LoggerEventArgs : EventArgs
+    {
+        public string Log { get; private set; }
+        public DateTime Time { get; private set; }
+        public LoggerEventArgs(string log)
+        {
+            Time = DateTime.Now;
+            Log = log;
+        }
+    }
+
     public interface ILog
     {
         void Log(string message);
@@ -35,17 +46,6 @@ namespace ModbusTCP.Model
         public void Log(string message)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    public class LoggerEventArgs : EventArgs
-    {
-        public string Log { get; private set; }
-        public DateTime Time { get; private set; }
-        public LoggerEventArgs(string log)
-        {
-            Time = DateTime.Now;
-            Log = log;
         }
     }
 
