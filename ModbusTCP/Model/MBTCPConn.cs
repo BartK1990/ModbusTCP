@@ -44,8 +44,9 @@ namespace ModbusTCP.Model
     public class MBTCPConn : ObservableObject, ISerializable
     {
         private TcpClient _client;
-        private Int32 _modbusDelay = 1000; // in milliseconds
-        private Int16 _connectingTimeout = 5000; // in milliseconds
+        private int _modbusDelay = 1000; // in milliseconds
+        private short _connectingTimeout = 5000; // in milliseconds
+        private string messageTimeFormat = "HH:mm:ss| ";
         private List<ModbusAddrQty> readHoldingRegistersList = new List<ModbusAddrQty>();
         private IPAddress _ipSlaveAddress;
         private string _ipSlaveAddressText;
@@ -72,17 +73,7 @@ namespace ModbusTCP.Model
             private set
             { this.SetAndNotify(ref this._connectionStatus, value, () => this.ConnectionStatus); }
         }
-        public bool Connected
-        {
-            get
-            {
-                if (this._client != null && this._client.Client != null)
-                    return this._client.Connected;
-                else
-                    return false;
-            }
-        }
-
+        public bool Connected => _client?.Client != null && this._client.Connected;
         public string MessageSent { get; private set; }
         public string MessageReceived { get; private set; }
 
@@ -161,7 +152,7 @@ namespace ModbusTCP.Model
                         _client.ConnectAsync(_ipSlaveAddress, IPSlavePort).Wait(_connectingTimeout));
                     if (executionInTime)
                     {
-                        Log("Connected. IP:" + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
+                        Log("ConnectionStatus. IP:" + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
                         ConnectionStatus = true;
                         return;
                     }
@@ -217,30 +208,22 @@ namespace ModbusTCP.Model
         {
             ModbusAddrQty mm = new ModbusAddrQty(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
-            NetworkStream stream = _client.GetStream();
-            string timeFormat = "HH:mm:ss| ";
-            try
+            using (NetworkStream stream = _client.GetStream())
             {
                 while (_client.Connected && _client != null)
                 {
                     byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
                     monitor.Add(new ModbusMsg(
-                        DateTime.Now.ToString(timeFormat) + BitConverter.ToString(messageByteArray),
+                        DateTime.Now.ToString(messageTimeFormat) + BitConverter.ToString(messageByteArray),
                         ModbusMsgType.Query));
                     MessageSent = BitConverter.ToString(messageByteArray);
                     byte[] responseByteArray = await SendDataAsync(messageByteArray, stream);
                     MessageReceived = BitConverter.ToString(responseByteArray);
                     monitor.Add(new ModbusMsg(
-                        DateTime.Now.ToString(timeFormat) + BitConverter.ToString(responseByteArray),
+                        DateTime.Now.ToString(messageTimeFormat) + BitConverter.ToString(responseByteArray),
                         ModbusMsgType.Response));
-
                     await Task.Delay(_modbusDelay); // Delay to make pause between messages
                 }
-            }
-            finally
-            {
-                // Close everything.
-                stream.Close();
             }
         }
         private async Task<byte[]> SendDataAsync(byte[] byteArray, NetworkStream ns)

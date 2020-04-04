@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace ModbusTCP.Model
 {
-
-
-
     public class MBTCPMessages
     {
         private uint transactionIdentifierInternal = 0;

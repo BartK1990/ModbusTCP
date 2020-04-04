@@ -21,19 +21,19 @@ namespace ModbusTCP.Tests
         [Test]
         public void WrongIpAddressInputTest()
         {
-            Assert.That(0, !Is.EqualTo(_mbtcpConn.SetSlaveIPv4Address("notGood")), "IP address set instead of wrong input");
+            Assert.That(0, Is.Not.EqualTo(_mbtcpConn.SetSlaveIPv4Address("notGood")), "IP address set instead of wrong input");
         }
 
         [Test]
         public void WrongIpPortInputTest()
         {
-            Assert.That(0, !Is.EqualTo(_mbtcpConn.SetSlaveIPPort(-1)), "IP port set instead of wrong input");
+            Assert.That(0, Is.Not.EqualTo(_mbtcpConn.SetSlaveIPPort(-1)), "IP port set instead of wrong input");
         }
 
         [Test]
         public void WrongIpPortInputTest2()
         {
-            Assert.That(0, !Is.EqualTo(_mbtcpConn.SetSlaveIPPort(70000)), "IP port set instead of wrong input");
+            Assert.That(0, Is.Not.EqualTo(_mbtcpConn.SetSlaveIPPort(70000)), "IP port set instead of wrong input");
         }
     }
 }
