@@ -23,7 +23,7 @@ namespace ModbusTCP.Model
             }
             catch
             {
-                return TcpState.Closed;
+                return TcpState.Unknown;
             }
         }
     }
