@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -66,17 +67,26 @@ namespace ModbusTCP.Model
         private bool _ipAddressSet = false;
         private bool _ipPortSet = false;
         public bool IpSet => _ipAddressSet && _ipPortSet;
-        private bool _connectionStatus;
-        public bool ConnectionStatus
+        private bool communicating;
+        public bool Communicating
         {
-            get => _connectionStatus;
-            private set
-            { this.SetAndNotify(ref this._connectionStatus, value, () => this.ConnectionStatus); }
+            get => communicating;
+            private set { this.SetAndNotify(ref this.communicating, value, () => this.Communicating); }
         }
-        public bool Connected => _client?.Client != null && this._client.Connected;
+        private TcpState tcpState;
+        public TcpState TcpState 
+        {
+            get => tcpState;
+            private set { this.SetAndNotify(ref this.tcpState, value, () => this.TcpState); }
+        }
+        private bool connected;
+        public bool Connected
+        {
+            get => connected;
+            private set { this.SetAndNotify(ref this.connected, value, () => this.Connected); }
+        }
         public string MessageSent { get; private set; }
         public string MessageReceived { get; private set; }
-
         private readonly ILog _logger;
 
         public MBTCPConn()
@@ -139,6 +149,36 @@ namespace ModbusTCP.Model
                 return 1;
             }
         }
+        private void UpdateConnectionState()
+        {
+            if (_client != null)
+            {
+                Connected = _client.Client != null && _client.Connected && SocketConnected();
+                var state =_client.GetState();
+                if(TcpState != state)
+                {
+                    TcpState = state;
+                    Log($"Tcp state changed. Current state: {state}");
+                }
+            }
+            else
+            {
+                Connected = false;
+            }
+            if (!Connected)
+            {
+                Log("Tcp client is not connected");
+                Communicating = false;
+            }
+        }
+
+        private bool SocketConnected()
+        {
+            if (_client?.Client == null) return false;
+            var s = _client.Client;
+            return !s.Poll(0, SelectMode.SelectRead) || (s.Available != 0);
+        }
+
         public async void ConnectAsync()
         {
             try
@@ -152,8 +192,9 @@ namespace ModbusTCP.Model
                         _client.ConnectAsync(_ipSlaveAddress, IPSlavePort).Wait(_connectingTimeout));
                     if (executionInTime)
                     {
-                        Log("ConnectionStatus. IP:" + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
-                        ConnectionStatus = true;
+                        Log("Connected. IP:" + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
+                        UpdateConnectionState();
+                        CheckConnection();
                         return;
                     }
                     else
@@ -171,11 +212,21 @@ namespace ModbusTCP.Model
             {
                 Log("Connection error at IP." + _ipSlaveAddress.ToString() + " port: " + IPSlavePort);
             }
+            finally
+            {
+                UpdateConnectionState();
+            }
         }
 
-        private async void CheckConnection() //periodically check TCP connection until communication is not started
+        private async Task CheckConnection() // periodically check TCP connection until communication is not started
         {
-
+            if(_client == null)
+                return;
+            while (Connected && !Communicating)
+            {
+                UpdateConnectionState();
+                await Task.Delay(_modbusDelay); // Delay to make pause between checks
+            }
         }
         public int Disconnect()
         {
@@ -187,9 +238,9 @@ namespace ModbusTCP.Model
                     {
                         _client.Close();
                         Log("Disconnected successfully");
-                        ConnectionStatus = false;
                         return 0;
                     }
+
                     Log("Disconnecting fault. There was no connection");
                     return 1;
                 }
@@ -203,15 +254,20 @@ namespace ModbusTCP.Model
             {
                 throw;
             }
+            finally
+            {
+                UpdateConnectionState();
+            }
         }
-        public async Task StartCommunication(IList<ModbusMsg> monitor)
+        public async Task StartCommunication(IList<ModbusMsg> monitor) // main async Task handling communication
         {
             ModbusAddrQty mm = new ModbusAddrQty(1, 1);
             MBTCPMessages mbtcpm = new MBTCPMessages();
             using (NetworkStream stream = _client.GetStream())
             {
-                while (_client.Connected && _client != null)
+                while (_client != null && _client.Connected)
                 {
+                    Communicating = true;
                     byte[] messageByteArray = mbtcpm.ReadHoldingRegisterSend(mm.Address, mm.Quantity);
                     monitor.Add(new ModbusMsg(
                         DateTime.Now.ToString(messageTimeFormat) + BitConverter.ToString(messageByteArray),
@@ -225,6 +281,7 @@ namespace ModbusTCP.Model
                     await Task.Delay(_modbusDelay); // Delay to make pause between messages
                 }
             }
+            UpdateConnectionState();
         }
         private async Task<byte[]> SendDataAsync(byte[] byteArray, NetworkStream ns)
         {

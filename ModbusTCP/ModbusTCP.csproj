@@ -66,6 +66,7 @@
     <Compile Include="Model\MBTCPMessages.cs" />
     <Compile Include="Model\ObservableObject.cs" />
     <Compile Include="Model\Serializer.cs" />
+    <Compile Include="Model\TcpClientExtensions.cs" />
     <Compile Include="ViewModel\CommunicationViewModel.cs" />
     <Compile Include="ViewModel\ListBoxItems.cs" />
     <Compile Include="ViewModel\LoggerViewModel.cs" />

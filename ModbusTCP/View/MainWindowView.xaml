@@ -34,9 +34,9 @@
             <Button x:Name="MenuConnect_button" Margin="0 10 0 0" Height="30" Content="Connect" Click="MenuConnect_button_Click"/>
             <Button x:Name="MenuCommunication_button" Margin="0 0 0 0" Height="30" Content="Communication" Click="MenuCommunication_button_Click"/>
             <Button x:Name="MenuLogger_button" Margin="0 0 0 0" Height="30" Content="Logger" Click="MenuLogger_button_Click"/>
-            <DockPanel Margin="0,10,0,0">
+            <StackPanel Margin="0,10,0,0">
                 <Border BorderBrush="LightGray" BorderThickness="2"
-                        Visibility="{Binding ConnectionStatus, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        Visibility="{Binding Connected, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <StackPanel>
                         <StackPanel.Resources>
                             <Style TargetType="TextBlock">
@@ -46,7 +46,17 @@
                         <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">Connection</TextBlock>
                         <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">Active to IP:</TextBlock>
                         <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">192.168.192.322</TextBlock>
-                        <Button IsEnabled="{Binding ConnectionStatus, Mode=OneWay}">sadfsda</Button>
+                    </StackPanel>
+                </Border>
+                <Border BorderBrush="LightGray" BorderThickness="2"
+                        Visibility="{Binding Communicating, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel>
+                        <StackPanel.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="#FF919191" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <TextBlock Margin="0 0 0 0" HorizontalAlignment="Center">Communicating</TextBlock>
                         <TextBlock
                             Name="MyBouncingBall"
                             Margin="0 0 0 0"
@@ -71,7 +81,7 @@
                         </TextBlock>
                     </StackPanel>
                 </Border>
-            </DockPanel>
+            </StackPanel>
         </StackPanel>
         <DockPanel Grid.Row="1" Grid.Column="1">
             <ContentControl x:Name="WindowContent"/>

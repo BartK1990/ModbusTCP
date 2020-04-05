@@ -28,11 +28,18 @@ namespace ModbusTCP.ViewModel
             this._mbtcpconn.PropertyChanged += MBTCPConnEventHandler;
         }
 
-        private bool connectionStatus; // If loopback address
-        public bool ConnectionStatus
+        private bool connected;
+        public bool Connected
         {
-            get => this.connectionStatus;
-            set { this.SetAndNotify(ref this.connectionStatus, value, () => this.ConnectionStatus); }
+            get => this.connected;
+            set { this.SetAndNotify(ref this.connected, value, () => this.Connected); }
+        }
+
+        private bool communicating;
+        public bool Communicating
+        {
+            get => this.communicating;
+            set { this.SetAndNotify(ref this.communicating, value, () => this.Communicating); }
         }
 
         private bool ipAddressSetLoopback; // If loopback address
@@ -92,7 +99,7 @@ namespace ModbusTCP.ViewModel
                    x =>
                    {
                        Connect();
-                   }, x => (_mbtcpconn.IpSet && !_mbtcpconn.Connected)));
+                   }, x => (_mbtcpconn.IpSet && !Connected)));
             }
         }
 
@@ -105,7 +112,7 @@ namespace ModbusTCP.ViewModel
                    x =>
                    {
                        Disconnect();
-                   }, x => _mbtcpconn.Connected));
+                   }, x => Connected));
             }
         }
 
@@ -196,9 +203,13 @@ namespace ModbusTCP.ViewModel
                 {
                     IPPortSetText = _mbtcpconn.IPSlavePort.ToString();
                 }
-                if (e.PropertyName == "ConnectionStatus")
+                if (e.PropertyName == "Connected")
                 {
-                    ConnectionStatus = _mbtcpconn.ConnectionStatus;
+                    Connected = _mbtcpconn.Connected;
+                }
+                if (e.PropertyName == "Communicating")
+                {
+                    Communicating = _mbtcpconn.Communicating;
                 }
             }
         }
